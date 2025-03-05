@@ -3,8 +3,13 @@ Use Visual Studio. It works for C#.
 
 ## After cloning
 1. Open "Developer Powershell" and run command: *msbuild -t:restore* (Theoretically not neccessary but just to be sure). If the console is not found on the bottom already goto: "Tools" -> "Command Line" ->  "Developer Powershell".
-2. Open "Package Manager Console" also called PMC. If the console is not found on the bottom already goto: "Tools" -> "NuGet Package Manager" -> "Package Manager Console". 
-3. To Add/update database: use command *Update-Database* in PMC.
+2. Open "Package Manager Console" also called PMC. If the console is not found on the bottom already goto: "Tools" -> "NuGet Package Manager" -> "Package Manager Console".
+  3. If an error along the lines of "The term 'Update-Database' is not recognized as the name of a cmdlet" is thrown, restart Visual Studio and do it again.
+4. To Add/update database: use command *Update-Database* in PMC.
+5. Run the program (The green arrow button)
+
+![image](https://github.com/user-attachments/assets/60fab5fb-6efa-480d-a4bc-b3c0fcf0a5ba)
+
 
 ### Seed data
 I have created seed data (see: Models\SeedData.cs). This means the database will be populated with the following first time it runs:
