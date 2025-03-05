@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Groupify.Data;
 
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext : IdentityDbContext<UserAccount>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -13,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext
     }
 
     DbSet<UserAccount> userAccounts;
+
     public DbSet<Student> Students { get; set; }
     public DbSet<Employee> Employees { get; set; }
 
