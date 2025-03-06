@@ -2,10 +2,10 @@
 Use Visual Studio. It works for C#.
 
 ## After cloning
-1. Open "Developer Powershell" and run command: *msbuild -t:restore* (Theoretically not neccessary but just to be sure). If the console is not found on the bottom already goto: "Tools" -> "Command Line" ->  "Developer Powershell".
+1. Open "Developer Powershell" and run command: `msbuild -t:restore` (Theoretically not neccessary but just to be sure). If the console is not found on the bottom already goto: "Tools" -> "Command Line" ->  "Developer Powershell".
 2. Open "Package Manager Console" also called PMC. If the console is not found on the bottom already goto: "Tools" -> "NuGet Package Manager" -> "Package Manager Console".
   3. If an error along the lines of "The term 'Update-Database' is not recognized as the name of a cmdlet" is thrown, restart Visual Studio and do it again.
-4. To Add/update database: use command *Update-Database* in PMC.
+4. To Add/update database: use command `Update-Database` in PMC.
 5. Run the program (The green arrow button)
 
 ![image](https://github.com/user-attachments/assets/60fab5fb-6efa-480d-a4bc-b3c0fcf0a5ba)
@@ -26,7 +26,7 @@ All users share the same hardcoded unbreakable password: K*de0rd
 ## Working with database
 1. Add any new models to Data\ApplicationDbContext.cs (if you are changing existing models, this step is already done).
 2.   E.g. to add a table based of the model "Employee" the following line is used: public DbSet<Employee> Employees { get; set; }
-3. After adding the models, a migration need to be added. In the PMC use command: *Add-Migration InsertAShortDescriptionOfChangesHereWithNoSpaces*
+3. After adding the models, a migration need to be added. In the PMC use command: `Add-Migration InsertAShortDescriptionOfChangesHereWithNoSpaces`
 4. Check the migration file. Sucks if you don't read SQL, sorry.
 5. If migration file does what you want it to, in the PMC use command: *Update-Database*.
 
