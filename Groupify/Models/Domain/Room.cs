@@ -1,22 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace Groupify.Models;
+using Groupify.Models.Identity;
+namespace Groupify.Models.Domain;
 
-public class RoomModel
+public class Room
 {
     [Key]
     public int Id { get; set; }
     
     [Required]
-    public string TeacherModelId { get; set; }
-    [ForeignKey(nameof(TeacherModelId))]
-    public TeacherUser Teacher { get; set; } = null!;
+    public string TeacherProfileUserId { get; set; } = null!;
+    public virtual TeacherProfile Teacher { get; set; } = null!;
     
-    public ICollection<StudentUser> Students { get; set; } = new List<StudentUser>();
+    public virtual ICollection<StudentProfile> Students { get; set; } = new List<StudentProfile>();
     
-    public ICollection<GroupModel> Groups { get; set; } = new List<GroupModel>();
+    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
     
-    public void AddStudent(StudentUser student)
+    public void AddStudent(StudentProfile student)
     {
         if (Students.Contains(student))
             throw new InvalidOperationException("Student already in room");
@@ -24,7 +24,7 @@ public class RoomModel
         // student.Rooms.Add(this);
     }
     
-    public void RemoveStudent(StudentUser student)
+    public void RemoveStudent(StudentProfile student)
     {
         if (!Students.Contains(student))
             throw new InvalidOperationException("Student not in room");
@@ -38,7 +38,7 @@ public class RoomModel
         var all = Students.ToList();
         for (int i = 0; i < all.Count; i += groupSize)
         {
-            var group = new GroupModel { Room = this };
+            var group = new Group { Room = this };
             foreach (var student in all.Skip(i).Take(groupSize))
                 group.Students.Add(student);
             Groups.Add(group);
