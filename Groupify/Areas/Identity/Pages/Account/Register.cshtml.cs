@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Groupify.Models.Identity;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -81,6 +82,10 @@ namespace Groupify.Areas.Identity.Pages.Account
             [Display(Name = "Last name")]
             public string LastName { get; set; }
 
+            [Required]
+            [Display(Name = "Role")]
+            [RegularExpression(@"^(Student|Teacher|Admin)$", ErrorMessage = "Role must be either Student, Teacher or Admin.")]
+            public string Role { get; set; } // "Student", "Teacher", "Admin"
             
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -138,6 +143,30 @@ namespace Groupify.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, Input.Role);
+
+                    switch (Input.Role)
+                    {
+                        case "Student":
+                            user.StudentProfile = new StudentProfile
+                            {
+                                UserId = user.Id
+                            };
+                            break;
+                        case "Teacher":
+                            user.TeacherProfile = new TeacherProfile
+                            {
+                                UserId = user.Id
+                            };
+                            break;
+                        case "Admin":
+                            user.AdminProfile = new AdminProfile
+                            {
+                                UserId = user.Id
+                            };
+                            break;
+                    }
+                    
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
