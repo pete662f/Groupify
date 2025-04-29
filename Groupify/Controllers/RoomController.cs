@@ -10,12 +10,46 @@ namespace Groupify.Controllers;
 public class RoomController : Controller
 {
     private readonly RoomService _roomService;
+    private readonly GroupService _groupService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public RoomController(RoomService roomService, UserManager<ApplicationUser> userManager)
+    public RoomController(RoomService roomService, GroupService groupService, UserManager<ApplicationUser> userManager)
     {
         _roomService = roomService;
+        _groupService = groupService;
         _userManager = userManager;
+    }
+    
+    // TODO: This function should be moved to another controller or updated to use a different method
+    public async Task<IActionResult> ListRooms()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        
+        if (user == null)
+            return Unauthorized(); // User not authenticated
+        
+        var rooms = await _roomService.GetRoomsByUserIdAsync(user.Id);
+        return View(rooms); // Return the list of rooms
+    }
+    
+    // TODO: This function should be moved to another controller or updated to use a different method
+    public async Task<IActionResult> ListOwnedRooms()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        
+        if (user == null)
+            return Unauthorized(); // User not authenticated
+        
+        var rooms = await _roomService.GetOwnedRoomsByUserIdAsync(user.Id);
+        return View(rooms); // Return the list of rooms
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateGroops(int roomId, int groupSize)
+    {
+        await _groupService.CreateGroupsAsync(roomId, groupSize);
+        
+        return RedirectToAction("Index");
     }
     
     [HttpPost]

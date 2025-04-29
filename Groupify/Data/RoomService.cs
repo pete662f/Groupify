@@ -25,6 +25,32 @@ public class RoomService
         
         return room;
     }
+
+    public async Task<IEnumerable<Room>> GetRoomsByUserIdAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+        
+        var rooms = await _context.Rooms
+            .Where(r => r.Users.Contains(user))
+            .ToListAsync();
+        
+        return rooms;
+    }
+
+    public async Task<IEnumerable<Room>> GetOwnedRoomsByUserIdAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+        
+        var rooms = await _context.Rooms
+            .Where(r => r.OwnerId == userId)
+            .ToListAsync();
+        
+        return rooms;
+    }
     
     public async Task AddUserToRoomAsync(string userId, int roomId)
     {
