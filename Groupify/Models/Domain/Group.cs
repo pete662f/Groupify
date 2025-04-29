@@ -12,8 +12,8 @@ public class Group
     public int RoomId { get; set; }
     public virtual Room Room { get; set; } = null!;
     
-    public ICollection<StudentProfile> Students { get; set; } = new List<StudentProfile>();
+    public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
     
-    public void AddStudent(StudentProfile student) => Students.Add(student);
-    public void RemoveStudent(StudentProfile student) => Students.Remove(student);
+    public void AddUser(ApplicationUser user) => Users.Add(user);
+    public void RemoveUser(ApplicationUser user) => Users.Remove(user);
 }
