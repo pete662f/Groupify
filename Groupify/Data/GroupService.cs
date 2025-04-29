@@ -68,4 +68,68 @@ public class GroupService
 
         return user.Groups;
     }
+    
+    public async Task RemoveGroupAsync(int groupId)
+    {
+        var group = await _context.Groups
+            .Include(g => g.Users)
+            .FirstOrDefaultAsync(g => g.Id == groupId);
+
+        if (group == null)
+            throw new InvalidOperationException("Group not found");
+
+        // Remove all users from the group
+        foreach (var user in group.Users)
+        {
+            group.Users.Remove(user);
+        }
+
+        _context.Groups.Remove(group);
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task AddUserToGroupAsync(string userId, int groupId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+
+        var group = await _context.Groups
+            .Include(g => g.Users)
+            .Include(g => g.Room)
+            .ThenInclude(r => r.Users)
+            .FirstOrDefaultAsync(g => g.Id == groupId);
+        
+        if (group == null)
+            throw new InvalidOperationException("Group not found");
+        
+        if (!group.Room.Users.Contains(user))
+            throw new InvalidOperationException("User not in room");
+
+        if (group.Users.Contains(user))
+            throw new InvalidOperationException("User already in group");
+
+        group.Users.Add(user);
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task RemoveUserFromGroupAsync(string userId, int groupId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+
+        var group = await _context.Groups
+            .Include(g => g.Users)
+            .FirstOrDefaultAsync(g => g.Id == groupId);
+
+        if (group == null)
+            throw new InvalidOperationException("Group not found");
+
+        if (!group.Users.Contains(user))
+            throw new InvalidOperationException("User not in group");
+
+        group.Users.Remove(user);
+        await _context.SaveChangesAsync();
+    }
 }
