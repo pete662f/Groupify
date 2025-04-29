@@ -33,5 +33,11 @@ public class GroupifyDbContext : IdentityDbContext<ApplicationUser>
             .HasMany(r => r.Groups)
             .WithOne(g => g.Room)
             .HasForeignKey(g => g.RoomId);
+        
+        // M:N User <-> Group
+        builder.Entity<Group>()
+            .HasMany(g => g.Users)
+            .WithMany(u => u.Groups)
+            .UsingEntity(j => j.ToTable("UserGroup"));
     }
 }

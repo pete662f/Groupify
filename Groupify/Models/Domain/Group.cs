@@ -13,7 +13,4 @@ public class Group
     public virtual Room Room { get; set; } = null!;
     
     public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
-    
-    public void AddUser(ApplicationUser user) => Users.Add(user);
-    public void RemoveUser(ApplicationUser user) => Users.Remove(user);
 }

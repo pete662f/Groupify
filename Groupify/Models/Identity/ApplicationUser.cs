@@ -14,6 +14,9 @@ public class ApplicationUser : IdentityUser
     
     // M:N to Room
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+    
+    // M:N to Group
+    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
 
     public Insight CreateInsightProfile()
     {

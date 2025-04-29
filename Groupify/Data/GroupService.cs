@@ -42,4 +42,30 @@ public class GroupService
 
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<IEnumerable<Group>> GetGroupsByRoomIdAsync(int roomId)
+    {
+        var room = await _context.Rooms
+            .Include(r => r.Groups)
+            .ThenInclude(g => g.Users)
+            .FirstOrDefaultAsync(r => r.Id == roomId);
+
+        if (room == null)
+            throw new InvalidOperationException("Room not found");
+
+        return room.Groups;
+    }
+    
+    public async Task<IEnumerable<Group>> GetGroupsByUserIdAsync(string userId)
+    {
+        var user = await _context.Users
+            .Include(u => u.Groups)
+            .ThenInclude(g => g.Room)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+
+        return user.Groups;
+    }
 }

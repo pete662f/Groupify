@@ -17,6 +17,21 @@ namespace Groupify.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
+            modelBuilder.Entity("ApplicationUserGroup", b =>
+                {
+                    b.Property<int>("GroupsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("GroupsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("UserGroup", (string)null);
+                });
+
             modelBuilder.Entity("ApplicationUserRoom", b =>
                 {
                     b.Property<int>("RoomsId")
@@ -76,6 +91,10 @@ namespace Groupify.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -109,9 +128,6 @@ namespace Groupify.Data.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -151,8 +167,6 @@ namespace Groupify.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -296,6 +310,21 @@ namespace Groupify.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ApplicationUserGroup", b =>
+                {
+                    b.HasOne("Groupify.Models.Domain.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Groupify.Models.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ApplicationUserRoom", b =>
                 {
                     b.HasOne("Groupify.Models.Domain.Room", null)
@@ -342,13 +371,6 @@ namespace Groupify.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.ApplicationUser", b =>
-                {
-                    b.HasOne("Groupify.Models.Domain.Group", null)
-                        .WithMany("Users")
-                        .HasForeignKey("GroupId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -400,11 +422,6 @@ namespace Groupify.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Groupify.Models.Domain.Group", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Groupify.Models.Domain.Room", b =>
