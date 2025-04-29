@@ -79,12 +79,29 @@ public class GroupService
             throw new InvalidOperationException("Group not found");
 
         // Remove all users from the group
-        foreach (var user in group.Users)
-        {
-            group.Users.Remove(user);
-        }
+        group.Users.Clear();
 
         _context.Groups.Remove(group);
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task RemoveAllGroupsByRoomIdAsync(int roomId)
+    {
+        var room = await _context.Rooms
+            .Include(r => r.Groups)
+            .FirstOrDefaultAsync(r => r.Id == roomId);
+
+        if (room == null)
+            throw new InvalidOperationException("Room not found");
+
+        // Clear users from all groups
+        foreach (var group in room.Groups)
+        {
+            group.Users.Clear();
+        }
+        
+        // Remove all groups
+        _context.Groups.RemoveRange(room.Groups);
         await _context.SaveChangesAsync();
     }
     
