@@ -44,6 +44,7 @@ public class RoomController : Controller
         return View(rooms); // Return the list of rooms
     }
 
+    // TODO: This function should be moved to another controller or updated to use a different method
     [HttpPost]
     public async Task<IActionResult> CreateGroops(int roomId, int groupSize)
     {
