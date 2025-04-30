@@ -1,7 +1,7 @@
 ﻿using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using System.Numerics;
 namespace Groupify.Data;
 
 public class GroupService
@@ -12,34 +12,168 @@ public class GroupService
     {
         _context = context;
     }
+    
+    private Vector<float> AverageVectorOfUsers(List<ApplicationUser> users)
+    {
+        Vector<float> sum = new Vector<float>(4);
+        foreach (var user in users)
+        {
+            if (user.Insight == null)
+                throw new InvalidOperationException("All users must have an Insight profile");
+            sum = Vector.Add(sum, user.Insight.ToVector());
+        }
+        return Vector.Divide(sum, users.Count());
+    }
+    
+    private List<List<ApplicationUser>> SwapOptimization(List<List<ApplicationUser>> groups, Vector<float> globalAverage, int iterations)
+    {
+        for (int i = 0; i < iterations; i++)
+        {
+            // Randomly select two groups
+            int group1 = Random.Shared.Next(groups.Count);
+            int group2;
+            do
+            {
+                group2 = Random.Shared.Next(groups.Count);
+            } while(group1 == group2);
+            
+            // Check if groups exist
+            if (!groups[group1].Any() || !groups[group2].Any()) continue;
+            
+            int index1 = Random.Shared.Next(groups[group1].Count-1);
+            int index2 = Random.Shared.Next(groups[group2].Count-1);
+            
+            var user1 = groups[group1][index1];
+            var user2 = groups[group2][index2];
+            
+            // Calculate the score before the swap
+            var originalScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group1]), globalAverage)));
+            var originalScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group2]), globalAverage)));
+            
+            // Swap users
+            groups[group1][index1] = user2;
+            groups[group2][index2] = user1;
+            
+            // Calculate the score after the swap
+            var newScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group1]), globalAverage)));
+            var newScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group2]), globalAverage)));
+            
+            // If the swap improved the score, keep it else swap back
+            if (newScore1 + newScore2 >= originalScore1 + originalScore2)
+            {
+                // Swap back
+                groups[group1][index1] = user1;
+                groups[group2][index2] = user2;
+            }
+        }
+        
+        return groups;
+    }
+
+    private List<List<ApplicationUser>> GreedyGrouping(List<ApplicationUser> users, List<List<ApplicationUser>> groups, Vector<float> globalAverage, int groupSize)
+    {
+        
+        
+        foreach (ApplicationUser user in users)
+        {
+            int bestGroup = -1; // -1 means no group found
+            int bestScore = int.MaxValue;
+            
+            for (int i = 0; i < groups.Count; i++)
+            {
+                if (groups[i].Count > groupSize) continue;
+
+                // Make a copy of the group and add the user to it (this is slightly inefficient)
+                var tempGroup = new List<ApplicationUser>(groups[i]) { user };
+                var average = AverageVectorOfUsers(tempGroup);
+                var difference = Vector.Abs(Vector.Add(average, globalAverage));
+                var score = (int)Vector.Sum(difference); 
+                
+                // Lower score is better
+                if (score >= bestScore) continue;
+                
+                // Found a better group
+                bestGroup = i;
+                bestScore = score;
+                
+            }
+
+            groups[bestGroup].Add(user);
+        }
+
+        return groups;
+    }
 
     public async Task CreateGroupsAsync(int roomId, int groupSize)
     {
         var room = await _context.Rooms
             .Include(r => r.Users)
+            .ThenInclude(u => u.Insight)
             .Include(r => r.Groups)
             .FirstOrDefaultAsync(r => r.Id == roomId);
 
         if (room == null)
             throw new InvalidOperationException("Room not found");
+        
+        if (room.Groups.Any())
+            throw new InvalidOperationException("Groups already exist in this room");
 
-        if (groupSize <= 0)
-            throw new ArgumentException("Group size must be greater than 0");
-
-        if (room.Users.Count < groupSize)
-            throw new InvalidOperationException("Not enough users in the room to create groups of this size");
-
+        if (groupSize <= 2)
+            throw new ArgumentException("Group size must be greater than 2");
+        
+        // Minimum is one full group plus at least 2 people for another group
+        if (room.Users.Count < groupSize + 2)
+            throw new InvalidOperationException($"Need at least {groupSize + 2} users to create meaningful groups (one of size {groupSize} and one of at least 2 people)");
+        
+        if (room.Users.Any(u => u.Insight == null))
+            throw new InvalidOperationException("All users must have an Insight profile to create groups");
+        
+        // Begin creating groups //
         var users = room.Users.ToList();
         
-        // TODO: Group users via a better algorithm
-        for (int i = 0; i < users.Count; i += groupSize)
+        Vector<float> globalAverage = AverageVectorOfUsers(users);
+        
+        // Sort based on total Insight values
+        users.Sort((u1, u2) =>
         {
-            var group = new Group { Room = room };
-            foreach (var user in users.Skip(i).Take(groupSize))
-                group.Users.Add(user);
-            room.Groups.Add(group);
+            float total1 = Vector.Sum(u1.Insight!.ToVector());
+            float total2 = Vector.Sum(u2.Insight!.ToVector());
+            return total1.CompareTo(total2);
+        });
+        
+        int totalGroups = (int)Math.Ceiling((double)users.Count / groupSize);
+        var groups = new List<List<ApplicationUser>>(totalGroups);
+        
+        // Initialize groups
+        for (int i = 0; i < totalGroups; i++)
+        {
+            groups.Add(new List<ApplicationUser>());
         }
 
+        // Greedy grouping
+        groups = GreedyGrouping(users, groups, globalAverage, groupSize);
+        
+        // Swap users to balance groups
+        groups = SwapOptimization(groups, globalAverage, iterations:100);
+        
+        // Create group entities
+        foreach (List<ApplicationUser> group in groups)
+        {
+            var newGroup = new Group
+            {
+                RoomId = roomId,
+                Users = group.ToList()
+            };
+            
+            _context.Groups.Add(newGroup);
+            room.Groups.Add(newGroup);
+            
+            foreach (var user in group)
+            {
+                user.Groups.Add(newGroup);
+            }
+        }
+        
         await _context.SaveChangesAsync();
     }
     
