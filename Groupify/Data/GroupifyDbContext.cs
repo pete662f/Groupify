@@ -8,9 +8,6 @@ public class GroupifyDbContext : IdentityDbContext<ApplicationUser>
 {
     public GroupifyDbContext(DbContextOptions<GroupifyDbContext> options) : base(options) {}
     
-    public DbSet<StudentProfile> StudentProfiles { get; set; } = null!;
-    public DbSet<AdminProfile> AdminProfiles { get; set; } = null!;
-    public DbSet<TeacherProfile> TeacherProfiles { get; set; } = null!;
     public DbSet<Insight> Insights { get; set; } = null!;
     public DbSet<Room> Rooms { get; set; } = null!;
     public DbSet<Group> Groups { get; set; } = null!;
@@ -19,40 +16,28 @@ public class GroupifyDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(builder);
         
-        // 1:1 StudentProfile <-> ApplicationUser
-        builder.Entity<ApplicationUser>()
-            .HasOne(u => u.StudentProfile)
-            .WithOne(p => p.User)
-            .HasForeignKey<StudentProfile>(p => p.UserId);
-        
-        // 1:1 TeacherProfile <-> ApplicationUser
-        builder.Entity<ApplicationUser>()
-            .HasOne(u => u.TeacherProfile)
-            .WithOne(p => p.User)
-            .HasForeignKey<TeacherProfile>(p => p.UserId);
-        
-        // 1:1 AdminProfile <-> ApplicationUser
-        builder.Entity<ApplicationUser>()
-            .HasOne(u => u.AdminProfile)
-            .WithOne(p => p.User)
-            .HasForeignKey<AdminProfile>(p => p.UserId);
-        
-        // M:N StudentProfile <-> Room
+        // M:N User <-> Room
         builder.Entity<Room>()
-            .HasMany(r => r.Students)
+            .HasMany(r => r.Users)
             .WithMany(s => s.Rooms)
-            .UsingEntity(j => j.ToTable("StudentRoom"));
+            .UsingEntity(j => j.ToTable("UserRoom"));
         
-        // 1:N TeacherProfile <-> Room
-        builder.Entity<TeacherProfile>()
+        // 1:N RoomOwner <-> Room
+        builder.Entity<ApplicationUser>()
             .HasMany(t => t.CreatedRooms)
-            .WithOne(r => r.Teacher)
-            .HasForeignKey(r => r.TeacherProfileUserId);
+            .WithOne(r => r.Owner)
+            .HasForeignKey(r => r.OwnerId);
         
         // 1:N Room <-> Group
         builder.Entity<Room>()
             .HasMany(r => r.Groups)
             .WithOne(g => g.Room)
             .HasForeignKey(g => g.RoomId);
+        
+        // M:N User <-> Group
+        builder.Entity<Group>()
+            .HasMany(g => g.Users)
+            .WithMany(u => u.Groups)
+            .UsingEntity(j => j.ToTable("UserGroup"));
     }
 }

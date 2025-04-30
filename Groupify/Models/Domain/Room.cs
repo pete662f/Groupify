@@ -9,39 +9,42 @@ public class Room
     public int Id { get; set; }
     
     [Required]
-    public string TeacherProfileUserId { get; set; } = null!;
-    public virtual TeacherProfile Teacher { get; set; } = null!;
+    public string OwnerId { get; set; } = null!; // OwnerId is a GUID thus string
+    public virtual ApplicationUser Owner { get; set; } = null!;
     
-    public virtual ICollection<StudentProfile> Students { get; set; } = new List<StudentProfile>();
+    [Required, MinLength(2)]
+    public string Name { get; set; } = null!;
+    
+    public virtual ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
     
     public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
     
-    public void AddStudent(StudentProfile student)
+    /*public void AddUser(ApplicationUser user)
     {
-        if (Students.Contains(student))
+        if (Users.Contains(user))
             throw new InvalidOperationException("Student already in room");
-        Students.Add(student);
+        Users.Add(user);
         // student.Rooms.Add(this);
     }
     
-    public void RemoveStudent(StudentProfile student)
+    public void RemoveUser(ApplicationUser user)
     {
-        if (!Students.Contains(student))
+        if (!Users.Contains(user))
             throw new InvalidOperationException("Student not in room");
-        Students.Remove(student);
+        Users.Remove(user);
         // student.Rooms.Remove(this);
     }
     
     public void CreateGroup(int groupSize)
     {
         if (groupSize <= 0) throw new ArgumentException("Group size must be greater than 0");
-        var all = Students.ToList();
+        var all = Users.ToList();
         for (int i = 0; i < all.Count; i += groupSize)
         {
             var group = new Group { Room = this };
-            foreach (var student in all.Skip(i).Take(groupSize))
-                group.Students.Add(student);
+            foreach (var user in all.Skip(i).Take(groupSize))
+                group.Users.Add(user);
             Groups.Add(group);
         }
-    }
+    }*/
 }

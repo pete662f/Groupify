@@ -17,6 +17,36 @@ namespace Groupify.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
+            modelBuilder.Entity("ApplicationUserGroup", b =>
+                {
+                    b.Property<int>("GroupsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("GroupsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("UserGroup", (string)null);
+                });
+
+            modelBuilder.Entity("ApplicationUserRoom", b =>
+                {
+                    b.Property<int>("RoomsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("RoomsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("UserRoom", (string)null);
+                });
+
             modelBuilder.Entity("Groupify.Models.Domain.Group", b =>
                 {
                     b.Property<int>("Id")
@@ -35,7 +65,7 @@ namespace Groupify.Data.Migrations
 
             modelBuilder.Entity("Groupify.Models.Domain.Insight", b =>
                 {
-                    b.Property<string>("StudentProfileUserId")
+                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Blue")
@@ -50,7 +80,7 @@ namespace Groupify.Data.Migrations
                     b.Property<int>("Yellow")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("StudentProfileUserId");
+                    b.HasKey("ApplicationUserId");
 
                     b.ToTable("Insights");
                 });
@@ -61,25 +91,19 @@ namespace Groupify.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TeacherProfileUserId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherProfileUserId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Rooms");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.AdminProfile", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("AdminProfiles");
                 });
 
             modelBuilder.Entity("Groupify.Models.Identity.ApplicationUser", b =>
@@ -152,35 +176,6 @@ namespace Groupify.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.StudentProfile", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("StudentProfiles");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.TeacherProfile", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Department")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("TeacherProfiles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -315,19 +310,34 @@ namespace Groupify.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RoomStudentProfile", b =>
+            modelBuilder.Entity("ApplicationUserGroup", b =>
                 {
-                    b.Property<int>("RoomsId")
-                        .HasColumnType("INTEGER");
+                    b.HasOne("Groupify.Models.Domain.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("StudentsUserId")
-                        .HasColumnType("TEXT");
+                    b.HasOne("Groupify.Models.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.HasKey("RoomsId", "StudentsUserId");
+            modelBuilder.Entity("ApplicationUserRoom", b =>
+                {
+                    b.HasOne("Groupify.Models.Domain.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasIndex("StudentsUserId");
-
-                    b.ToTable("StudentRoom", (string)null);
+                    b.HasOne("Groupify.Models.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Groupify.Models.Domain.Group", b =>
@@ -343,61 +353,24 @@ namespace Groupify.Data.Migrations
 
             modelBuilder.Entity("Groupify.Models.Domain.Insight", b =>
                 {
-                    b.HasOne("Groupify.Models.Identity.StudentProfile", "StudentProfile")
+                    b.HasOne("Groupify.Models.Identity.ApplicationUser", "ApplicationUser")
                         .WithOne("Insight")
-                        .HasForeignKey("Groupify.Models.Domain.Insight", "StudentProfileUserId")
+                        .HasForeignKey("Groupify.Models.Domain.Insight", "ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("StudentProfile");
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("Groupify.Models.Domain.Room", b =>
                 {
-                    b.HasOne("Groupify.Models.Identity.TeacherProfile", "Teacher")
+                    b.HasOne("Groupify.Models.Identity.ApplicationUser", "Owner")
                         .WithMany("CreatedRooms")
-                        .HasForeignKey("TeacherProfileUserId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.AdminProfile", b =>
-                {
-                    b.HasOne("Groupify.Models.Identity.ApplicationUser", "User")
-                        .WithOne("AdminProfile")
-                        .HasForeignKey("Groupify.Models.Identity.AdminProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.StudentProfile", b =>
-                {
-                    b.HasOne("Groupify.Models.Domain.Group", null)
-                        .WithMany("Students")
-                        .HasForeignKey("GroupId");
-
-                    b.HasOne("Groupify.Models.Identity.ApplicationUser", "User")
-                        .WithOne("StudentProfile")
-                        .HasForeignKey("Groupify.Models.Identity.StudentProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.TeacherProfile", b =>
-                {
-                    b.HasOne("Groupify.Models.Identity.ApplicationUser", "User")
-                        .WithOne("TeacherProfile")
-                        .HasForeignKey("Groupify.Models.Identity.TeacherProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -451,26 +424,6 @@ namespace Groupify.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoomStudentProfile", b =>
-                {
-                    b.HasOne("Groupify.Models.Domain.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Groupify.Models.Identity.StudentProfile", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Groupify.Models.Domain.Group", b =>
-                {
-                    b.Navigation("Students");
-                });
-
             modelBuilder.Entity("Groupify.Models.Domain.Room", b =>
                 {
                     b.Navigation("Groups");
@@ -478,21 +431,9 @@ namespace Groupify.Data.Migrations
 
             modelBuilder.Entity("Groupify.Models.Identity.ApplicationUser", b =>
                 {
-                    b.Navigation("AdminProfile");
-
-                    b.Navigation("StudentProfile");
-
-                    b.Navigation("TeacherProfile");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.StudentProfile", b =>
-                {
-                    b.Navigation("Insight");
-                });
-
-            modelBuilder.Entity("Groupify.Models.Identity.TeacherProfile", b =>
-                {
                     b.Navigation("CreatedRooms");
+
+                    b.Navigation("Insight");
                 });
 #pragma warning restore 612, 618
         }
