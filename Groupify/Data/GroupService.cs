@@ -38,8 +38,7 @@ public class GroupService
             } while(group1 == group2);
             
             // Check if groups exist
-            if (!groups[group1].Any() || !groups[group2].Any())
-                continue;
+            if (!groups[group1].Any() || !groups[group2].Any()) continue;
             
             int index1 = Random.Shared.Next(groups[group1].Count-1);
             int index2 = Random.Shared.Next(groups[group2].Count-1);
@@ -75,10 +74,10 @@ public class GroupService
     {
         
         
-        foreach (var user in users)
+        foreach (ApplicationUser user in users)
         {
-            int best_group = -1; // -1 means no group found
-            int best_score = int.MaxValue;
+            int bestGroup = -1; // -1 means no group found
+            int bestScore = int.MaxValue;
             
             for (int i = 0; i < groups.Count; i++)
             {
@@ -91,15 +90,15 @@ public class GroupService
                 var score = (int)Vector.Sum(difference); 
                 
                 // Lower score is better
-                if (score >= best_score) continue;
+                if (score >= bestScore) continue;
                 
                 // Found a better group
-                best_group = i;
-                best_score = score;
+                bestGroup = i;
+                bestScore = score;
                 
             }
 
-            groups[best_group].Add(user);
+            groups[bestGroup].Add(user);
         }
 
         return groups;
@@ -137,8 +136,8 @@ public class GroupService
         // Sort based on total Insight values
         users.Sort((u1, u2) =>
         {
-            float total1 = Vector.Sum(u1.Insight.ToVector());
-            float total2 = Vector.Sum(u2.Insight.ToVector());
+            float total1 = Vector.Sum(u1.Insight!.ToVector());
+            float total2 = Vector.Sum(u2.Insight!.ToVector());
             return total1.CompareTo(total2);
         });
         
@@ -158,7 +157,7 @@ public class GroupService
         groups = SwapOptimization(groups, globalAverage, iterations:100);
         
         // Create group entities
-        foreach (var group in groups)
+        foreach (List<ApplicationUser> group in groups)
         {
             var newGroup = new Group
             {
