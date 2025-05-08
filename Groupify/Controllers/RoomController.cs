@@ -1,4 +1,5 @@
 ﻿using Groupify.Data;
+using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,29 +17,36 @@ public class RoomController : Controller
         _userManager = userManager;
     }
     
-    // TODO: This function should be moved to another controller or updated to use a different method
-    public async Task<IActionResult> ListRooms()
+    [HttpGet("/rooms")]
+    public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        IEnumerable<Room> rooms;
         
-        if (user == null)
-            return Unauthorized(); // User not authenticated
-        
-        var rooms = await _roomService.GetRoomsByUserIdAsync(user.Id);
-        return View(rooms); // Return the list of rooms
+        if (await _userManager.IsInRoleAsync(user, "Teacher"))
+        {
+            rooms = await _roomService.GetOwnedRoomsByUserIdAsync(user.Id);
+        }
+        else if (await _userManager.IsInRoleAsync(user, "Student"))
+        {
+            rooms = await _roomService.GetRoomsByUserIdAsync(user.Id);
+        }
+        else
+        {
+            rooms = []; // No rooms for other roles
+        }
+
+        return View("Index", rooms);
     }
     
-    // TODO: This function should be moved to another controller or updated to use a different method
-    public async Task<IActionResult> ListOwnedRooms()
+    [HttpGet("/room")]
+    public IActionResult RedirectToRooms()
     {
-        var user = await _userManager.GetUserAsync(User);
-        
-        if (user == null)
-            return Unauthorized(); // User not authenticated
-        
-        var rooms = await _roomService.GetOwnedRoomsByUserIdAsync(user.Id);
-        return View(rooms); // Return the list of rooms
+        return Redirect("/rooms");
     }
+
     
     [HttpPost]
     public async Task<IActionResult> CreateRoom(string roomName, bool addSelf)

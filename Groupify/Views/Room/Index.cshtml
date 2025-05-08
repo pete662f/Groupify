@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Groupify.Models.Domain.Room>
+
+<h2>Your Rooms</h2>
+
+@foreach (var room in Model)
+{
+    <div>@room.Name</div>
+}
