@@ -1,6 +1,7 @@
 ﻿using Groupify.Data;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,9 +48,17 @@ public class RoomController : Controller
         return Redirect("/rooms");
     }
 
+    // Only for teachers
+    [Authorize(Roles = "Teacher")]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
     
     [HttpPost]
-    public async Task<IActionResult> CreateRoom(string roomName, bool addSelf)
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> CreateRoom(string roomName)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -58,7 +67,7 @@ public class RoomController : Controller
         
         try
         {
-            await _roomService.CreateRoomAsync(roomName, user.Id, addSelf);
+            await _roomService.CreateRoomAsync(roomName, user.Id);
             return RedirectToAction("Index"); // Redirect to the index
         }
         catch (InvalidOperationException e)
@@ -68,6 +77,7 @@ public class RoomController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> RemoveRoom(Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -95,6 +105,7 @@ public class RoomController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> ChangeRoomName(Guid roomId, string newName)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -122,6 +133,7 @@ public class RoomController : Controller
     }
     
     [HttpPost]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> AddUserToRoom(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -149,6 +161,7 @@ public class RoomController : Controller
     }
     
     [HttpPost]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> RemoveUserFromRoom(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);

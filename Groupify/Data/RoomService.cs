@@ -103,7 +103,7 @@ public class RoomService
         room.Name = newName;
     }
     
-    public async Task CreateRoomAsync(string roomName, string userId, bool addSelf)
+    public async Task CreateRoomAsync(string roomName, string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
@@ -120,11 +120,6 @@ public class RoomService
         };
         
         _context.Rooms.Add(room);
-        
-        if (addSelf)
-        {
-            await AddUserToRoomAsync(userId, room.Id);
-        }
         
         await _context.SaveChangesAsync();
     }
