@@ -6,7 +6,7 @@ namespace Groupify.Models.Domain;
 public class Room
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; private set; } = Guid.NewGuid();
     
     [Required]
     public string OwnerId { get; set; } = null!; // OwnerId is a GUID thus string

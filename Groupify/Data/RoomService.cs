@@ -16,7 +16,7 @@ public class RoomService
         _userManager = userManager;
     }
     
-    public async Task<Room> GetRoomByIdAsync(int roomId)
+    public async Task<Room> GetRoomByIdAsync(Guid roomId)
     {
         var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
 
@@ -52,7 +52,7 @@ public class RoomService
         return rooms;
     }
     
-    public async Task AddUserToRoomAsync(string userId, int roomId)
+    public async Task AddUserToRoomAsync(string userId, Guid roomId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
@@ -72,7 +72,7 @@ public class RoomService
         await _context.SaveChangesAsync();
     }
     
-    public async Task RemoveUserFromRoomAsync(string userId, int roomId)
+    public async Task RemoveUserFromRoomAsync(string userId, Guid roomId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
@@ -92,7 +92,7 @@ public class RoomService
         await _context.SaveChangesAsync();
     }
 
-    public async Task ChangeRoomNameAsync(int roomId, string newName)
+    public async Task ChangeRoomNameAsync(Guid roomId, string newName)
     {
         var room = await _context.Rooms
             .FirstOrDefaultAsync(r => r.Id == roomId);
@@ -129,7 +129,7 @@ public class RoomService
         await _context.SaveChangesAsync();
     }
     
-    public async Task RemoveRoomAsync(int roomId, string userId)
+    public async Task RemoveRoomAsync(Guid roomId, string userId)
     {
         var room = await _context.Rooms
             .Include(r => r.Groups)

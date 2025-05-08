@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using Groupify.Data;
-using Groupify.Models.Domain;
+﻿using Groupify.Data;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +8,11 @@ namespace Groupify.Controllers;
 public class RoomController : Controller
 {
     private readonly RoomService _roomService;
-    private readonly GroupService _groupService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public RoomController(RoomService roomService, GroupService groupService, UserManager<ApplicationUser> userManager)
+    public RoomController(RoomService roomService, UserManager<ApplicationUser> userManager)
     {
         _roomService = roomService;
-        _groupService = groupService;
         _userManager = userManager;
     }
     
@@ -43,15 +39,6 @@ public class RoomController : Controller
         var rooms = await _roomService.GetOwnedRoomsByUserIdAsync(user.Id);
         return View(rooms); // Return the list of rooms
     }
-
-    // TODO: This function should be moved to another controller or updated to use a different method
-    [HttpPost]
-    public async Task<IActionResult> CreateGroops(int roomId, int groupSize)
-    {
-        await _groupService.CreateGroupsAsync(roomId, groupSize);
-        
-        return RedirectToAction("Index");
-    }
     
     [HttpPost]
     public async Task<IActionResult> CreateRoom(string roomName, bool addSelf)
@@ -73,7 +60,7 @@ public class RoomController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> RemoveRoom(int roomId)
+    public async Task<IActionResult> RemoveRoom(Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -100,7 +87,7 @@ public class RoomController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ChangeRoomName(int roomId, string newName)
+    public async Task<IActionResult> ChangeRoomName(Guid roomId, string newName)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -127,7 +114,7 @@ public class RoomController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddUserToRoom(string userId, int roomId)
+    public async Task<IActionResult> AddUserToRoom(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -154,7 +141,7 @@ public class RoomController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> RemoveUserFromRoom(string userId, int roomId)
+    public async Task<IActionResult> RemoveUserFromRoom(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
         
