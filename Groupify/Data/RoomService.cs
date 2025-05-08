@@ -18,7 +18,10 @@ public class RoomService
     
     public async Task<Room> GetRoomByIdAsync(Guid roomId)
     {
-        var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
+        var room = await _context.Rooms
+            .Include(r => r.Users)    // <— bring back the Users M:N nav‐prop
+            .Include(r => r.Groups)   // <— if you also want Groups
+            .FirstOrDefaultAsync(r => r.Id == roomId);
 
         if (room == null)
             throw new InvalidOperationException("Room not found");
@@ -52,25 +55,25 @@ public class RoomService
         return rooms;
     }
     
-    public async Task AddUserToRoomAsync(string userId, Guid roomId)
-    {
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
-            throw new InvalidOperationException("User not found");
-        
-        var room = await _context.Rooms
-            .Include(r => r.Users)
-            .FirstOrDefaultAsync(r => r.Id == roomId);
-        
-        if (room == null)
-            throw new InvalidOperationException("Room not found");
-        
-        if (room.Users.Contains(user))
-            throw new InvalidOperationException("User already in room");
-        
-        room.Users.Add(user);
-        await _context.SaveChangesAsync();
-    }
+public async Task AddUserToRoomAsync(string userId, Guid roomId)
+{
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+        throw new InvalidOperationException("User not found");
+    
+    var room = await _context.Rooms
+        .Include(r => r.Users)
+        .FirstOrDefaultAsync(r => r.Id == roomId);
+    
+    if (room == null)
+        throw new InvalidOperationException("Room not found");
+    
+    if (room.Users.Contains(user))
+        throw new InvalidOperationException("User already in room");
+    
+    room.Users.Add(user);
+    await _context.SaveChangesAsync();
+}
     
     public async Task RemoveUserFromRoomAsync(string userId, Guid roomId)
     {
@@ -103,12 +106,14 @@ public class RoomService
         room.Name = newName;
     }
     
-    public async Task CreateRoomAsync(string roomName, string userId)
+    public async Task<Guid> CreateRoomAsync(string roomName, string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
             throw new InvalidOperationException("User not found");
         
+        
+        Console.WriteLine("name:"+roomName);
         if (string.IsNullOrWhiteSpace(roomName) || roomName.Length < 2)
             throw new ArgumentException("Room name must be at least 2 characters long");
         
@@ -122,6 +127,8 @@ public class RoomService
         _context.Rooms.Add(room);
         
         await _context.SaveChangesAsync();
+        
+        return room.Id;
     }
     
     public async Task RemoveRoomAsync(Guid roomId, string userId)

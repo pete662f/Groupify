@@ -22,7 +22,11 @@
 
 @foreach (var room in Model)
 {
-    <div>@room.Name</div>
+    <div><a
+        asp-action="Details"
+        asp-route-roomId="@room.Id">
+        @room.Name
+    </a></div>
 }
 
 @{
