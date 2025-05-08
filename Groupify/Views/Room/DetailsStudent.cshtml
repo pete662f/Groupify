@@ -1,0 +1,50 @@
+﻿@model Groupify.ViewModels.Room.DetailsRoomViewModel
+
+@{
+    ViewData["Title"] = "Room Details";
+}
+
+@* Flash messages from join *@
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["InfoMessage"] != null)
+{
+    <div class="alert alert-info">@TempData["InfoMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row text-center">
+    <h2>@Model.Room.Name</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3 class="text-center">Users</h3>
+        <ul>
+            @foreach (var user in Model.Room.Users)
+            {
+                <li>@user.UserName</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center">Groups</h3>
+        <ul>
+            @foreach (var group in Model.Groups)
+            {
+                <li>@group.Id</li>
+                <ul>
+                    @foreach (var user in group.Users)
+                    {
+                        <li>@user.UserName</li>
+                    }
+                </ul>
+            }
+        </ul>
+    </div>
+</div>

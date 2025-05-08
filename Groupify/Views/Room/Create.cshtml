@@ -1,0 +1,17 @@
+﻿@model Groupify.ViewModels.Room.CreateRoomViewModel
+
+@{
+    ViewData["Title"] = "Create Room";
+}
+
+<h2>Create room</h2>
+
+<!-- This is a form to create a new room -->
+<form asp-action="CreateRoom" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

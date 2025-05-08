@@ -104,7 +104,7 @@ public class GroupService
         return groups;
     }
 
-    public async Task CreateGroupsAsync(int roomId, int groupSize)
+    public async Task CreateGroupsAsync(Guid roomId, int groupSize)
     {
         var room = await _context.Rooms
             .Include(r => r.Users)
@@ -177,7 +177,7 @@ public class GroupService
         await _context.SaveChangesAsync();
     }
     
-    public async Task<IEnumerable<Group>> GetGroupsByRoomIdAsync(int roomId)
+    public async Task<IEnumerable<Group>> GetGroupsByRoomIdAsync(Guid roomId)
     {
         var room = await _context.Rooms
             .Include(r => r.Groups)
@@ -203,7 +203,7 @@ public class GroupService
         return user.Groups;
     }
     
-    public async Task RemoveGroupAsync(int groupId)
+    public async Task RemoveGroupAsync(Guid groupId)
     {
         var group = await _context.Groups
             .Include(g => g.Users)
@@ -219,7 +219,7 @@ public class GroupService
         await _context.SaveChangesAsync();
     }
     
-    public async Task RemoveAllGroupsByRoomIdAsync(int roomId)
+    public async Task RemoveAllGroupsByRoomIdAsync(Guid roomId)
     {
         var room = await _context.Rooms
             .Include(r => r.Groups)
@@ -239,7 +239,7 @@ public class GroupService
         await _context.SaveChangesAsync();
     }
     
-    public async Task AddUserToGroupAsync(string userId, int groupId)
+    public async Task AddUserToGroupAsync(string userId, Guid groupId)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
@@ -264,7 +264,7 @@ public class GroupService
         await _context.SaveChangesAsync();
     }
     
-    public async Task RemoveUserFromGroupAsync(string userId, int groupId)
+    public async Task RemoveUserFromGroupAsync(string userId, Guid groupId)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user == null)

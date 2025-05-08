@@ -1,7 +1,8 @@
-﻿using System.Security.Claims;
-using Groupify.Data;
+﻿using Groupify.Data;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
+using Groupify.ViewModels.Room;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,61 +11,131 @@ namespace Groupify.Controllers;
 public class RoomController : Controller
 {
     private readonly RoomService _roomService;
-    private readonly GroupService _groupService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public RoomController(RoomService roomService, GroupService groupService, UserManager<ApplicationUser> userManager)
+    public RoomController(RoomService roomService, UserManager<ApplicationUser> userManager)
     {
         _roomService = roomService;
-        _groupService = groupService;
         _userManager = userManager;
     }
     
-    // TODO: This function should be moved to another controller or updated to use a different method
-    public async Task<IActionResult> ListRooms()
+    [HttpGet("/rooms")]
+    [Authorize(Roles = "Teacher, Student")]
+    public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
-        
         if (user == null)
             return Unauthorized(); // User not authenticated
-        
-        var rooms = await _roomService.GetRoomsByUserIdAsync(user.Id);
-        return View(rooms); // Return the list of rooms
-    }
-    
-    // TODO: This function should be moved to another controller or updated to use a different method
-    public async Task<IActionResult> ListOwnedRooms()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        
-        if (user == null)
-            return Unauthorized(); // User not authenticated
-        
-        var rooms = await _roomService.GetOwnedRoomsByUserIdAsync(user.Id);
-        return View(rooms); // Return the list of rooms
-    }
 
-    // TODO: This function should be moved to another controller or updated to use a different method
-    [HttpPost]
-    public async Task<IActionResult> CreateGroops(int roomId, int groupSize)
-    {
-        await _groupService.CreateGroupsAsync(roomId, groupSize);
+        IEnumerable<Room> rooms;
         
-        return RedirectToAction("Index");
+        if (await _userManager.IsInRoleAsync(user, "Teacher"))
+        {
+            rooms = await _roomService.GetOwnedRoomsByUserIdAsync(user.Id);
+        }
+        else if (await _userManager.IsInRoleAsync(user, "Student"))
+        {
+            rooms = await _roomService.GetRoomsByUserIdAsync(user.Id);
+        }
+        else
+        {
+            rooms = []; // No rooms for other roles
+        }
+
+        return View(rooms);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> CreateRoom(string roomName, bool addSelf)
+    [HttpGet("/room")]
+    public IActionResult RedirectToRooms()
+    {
+        return Redirect("/rooms");
+    }
+    
+    [HttpGet("/room/show/{roomId}")]
+    [Authorize(Roles = "Teacher, Student")]
+    public async Task<IActionResult> Details(Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized(); // User not authenticated
         
+        // Check if the user is in the room
+        Room? room = await _roomService.GetRoomByIdAsync(roomId);
+        if (room == null)
+            return NotFound();
+
+        // Check if the user is the owner or a member of the room
+        bool isOwner  = room.OwnerId == user.Id;
+        bool isMember = room.Users.Any(u => u.Id == user.Id);
+        if (!isOwner && !isMember)
+            return Forbid();
+        
+        DetailsRoomViewModel vm = new DetailsRoomViewModel
+        {
+            Room = room,
+            Groups = room.Groups
+        };
+
+        // ReSharper disable HeuristicUnreachableCode
+        if (isOwner)
+            return View("DetailsTeacher", vm);
+        else
+            return View("DetailsStudent", vm);
+    }
+    
+    [HttpGet("/room/join/{roomId}")]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> JoinRoom(Guid roomId)
+    {
+        var user = await _userManager.GetUserAsync(User);
         if (user == null)
             return Unauthorized(); // User not authenticated
         
         try
         {
-            await _roomService.CreateRoomAsync(roomName, user.Id, addSelf);
-            return RedirectToAction("Index"); // Redirect to the index
+            // Check if the user is already in the room
+            var room = await _roomService.GetRoomByIdAsync(roomId);
+            if (room.Users.Any(u => u.Id == user.Id))
+            {
+                TempData["InfoMessage"] = "You’re already in that room.";
+            }
+            else
+            {
+                await _roomService.AddUserToRoomAsync(user.Id, roomId);
+                TempData["SuccessMessage"] = "You’ve successfully joined the room!";
+            }
+            
+            return RedirectToAction(nameof(Details), new { roomId });
+        }
+        catch (InvalidOperationException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+    // Only for teachers
+    [Authorize(Roles = "Teacher")]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    
+    [HttpPost]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> CreateRoom(CreateRoomViewModel vm)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized(); // User not authenticated
+        
+        if (!ModelState.IsValid)
+            return View("Create", vm);
+        
+        try
+        {
+            Guid roomId = await _roomService.CreateRoomAsync(vm.Name, user.Id);
+            return RedirectToAction(nameof(Details), new { roomId });
         }
         catch (InvalidOperationException e)
         {
@@ -73,7 +144,8 @@ public class RoomController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> RemoveRoom(int roomId)
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> RemoveRoom(Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -100,7 +172,8 @@ public class RoomController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ChangeRoomName(int roomId, string newName)
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> ChangeRoomName(Guid roomId, string newName)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -127,7 +200,8 @@ public class RoomController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddUserToRoom(string userId, int roomId)
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> AddUserToRoom(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -154,7 +228,8 @@ public class RoomController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> RemoveUserFromRoom(string userId, int roomId)
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> RemoveUserFromRoom(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
         

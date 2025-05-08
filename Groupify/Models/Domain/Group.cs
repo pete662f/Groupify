@@ -6,10 +6,10 @@ namespace Groupify.Models.Domain;
 public class Group
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; private set; } = Guid.NewGuid();
     
     [Required]
-    public int RoomId { get; set; }
+    public Guid RoomId { get; set; }
     public virtual Room Room { get; set; } = null!;
     
     public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
