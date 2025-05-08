@@ -1,6 +1,7 @@
 ﻿using Groupify.Data;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
+using Groupify.ViewModels.Group;
 using Groupify.ViewModels.Room;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,11 +12,13 @@ namespace Groupify.Controllers;
 public class RoomController : Controller
 {
     private readonly RoomService _roomService;
+    private readonly GroupService _groupService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public RoomController(RoomService roomService, UserManager<ApplicationUser> userManager)
+    public RoomController(RoomService roomService, GroupService groupService, UserManager<ApplicationUser> userManager)
     {
         _roomService = roomService;
+        _groupService = groupService;
         _userManager = userManager;
     }
     
@@ -51,6 +54,44 @@ public class RoomController : Controller
         return Redirect("/rooms");
     }
     
+    [HttpPost]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> CreateGroups(CompositeRoomViewModel  vm)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized(); // User not authenticated
+        
+        var room = await _roomService.GetRoomByIdAsync(vm.CreateGroup.RoomId);
+        if (room == null)
+            return NotFound();
+            
+        bool isOwner = room.OwnerId == user.Id;
+        if (!isOwner)
+            return Forbid();
+        
+        if (!ModelState.IsValid)
+        {
+            // **Repopulate only the RoomDetails** so the view has what it needs
+            vm.RoomDetails = new DetailsRoomViewModel {
+                Room   = room,
+                Groups = room.Groups
+            };
+            return View("DetailsTeacher", vm);
+        }
+
+        try
+        {
+            await _groupService.CreateGroupsAsync(vm.CreateGroup.RoomId, vm.CreateGroup.GroupSize);
+        }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
+        }
+        
+        return RedirectToAction(nameof(Details), new { vm.CreateGroup.RoomId });
+    }
+    
     [HttpGet("/room/show/{roomId}")]
     [Authorize(Roles = "Teacher, Student")]
     public async Task<IActionResult> Details(Guid roomId)
@@ -70,17 +111,20 @@ public class RoomController : Controller
         if (!isOwner && !isMember)
             return Forbid();
         
-        DetailsRoomViewModel vm = new DetailsRoomViewModel
+        // Create the view model
+        CompositeRoomViewModel vm = new CompositeRoomViewModel
         {
-            Room = room,
-            Groups = room.Groups
+            RoomDetails = new DetailsRoomViewModel
+            {
+                Room = room,
+                Groups = room.Groups
+            }
         };
-
-        // ReSharper disable HeuristicUnreachableCode
+        
         if (isOwner)
             return View("DetailsTeacher", vm);
-        else
-            return View("DetailsStudent", vm);
+        
+        return View("DetailsStudent", vm);
     }
     
     [HttpGet("/room/join/{roomId}")]

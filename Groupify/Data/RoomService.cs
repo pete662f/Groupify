@@ -79,7 +79,7 @@ public async Task AddUserToRoomAsync(string userId, Guid roomId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
-            throw new InvalidOperationException("User not found");
+                throw new InvalidOperationException("User not found");
         
         var room = await _context.Rooms
             .Include(r => r.Users)
