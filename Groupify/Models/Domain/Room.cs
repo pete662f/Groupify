@@ -10,14 +10,14 @@ public class Room
     
     [Required]
     public string OwnerId { get; set; } = null!; // OwnerId is a GUID thus string
-    public virtual ApplicationUser Owner { get; set; } = null!;
+    public ApplicationUser Owner { get; set; } = null!;
     
     [Required, MinLength(2)]
     public string Name { get; set; } = null!;
     
-    public virtual ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+    public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
     
-    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+    public ICollection<Group> Groups { get; set; } = new List<Group>();
     
     /*public void AddUser(ApplicationUser user)
     {

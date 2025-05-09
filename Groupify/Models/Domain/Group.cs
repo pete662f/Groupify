@@ -10,7 +10,7 @@ public class Group
     
     [Required]
     public Guid RoomId { get; set; }
-    public virtual Room Room { get; set; } = null!;
+    public Room Room { get; set; } = null!;
     
     public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
 }

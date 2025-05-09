@@ -7,16 +7,16 @@ public class ApplicationUser : IdentityUser
     public string FirstName { get; set; } = null!;
     public string LastName  { get; set; } = null!;
     
-    public virtual Insight? Insight  { get; set; }
+    public Insight? Insight  { get; set; }
     
     // 1:N to Room
-    public virtual ICollection<Room> CreatedRooms { get; set; } = new List<Room>();
+    public ICollection<Room> CreatedRooms { get; set; } = new List<Room>();
     
     // M:N to Room
-    public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+    public ICollection<Room> Rooms { get; set; } = new List<Room>();
     
     // M:N to Group
-    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+    public ICollection<Group> Groups { get; set; } = new List<Group>();
 
     public Insight CreateInsightProfile()
     {
