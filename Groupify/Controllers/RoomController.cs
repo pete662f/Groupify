@@ -245,7 +245,7 @@ public class RoomController : Controller
     
     [HttpPost]
     [Authorize(Roles = "Teacher")]
-    public async Task<IActionResult> AddUserToRoom(string userId, Guid roomId)
+    public async Task<IActionResult> AddUser(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
         
@@ -273,29 +273,24 @@ public class RoomController : Controller
     
     [HttpPost]
     [Authorize(Roles = "Teacher")]
-    public async Task<IActionResult> RemoveUserFromRoom(string userId, Guid roomId)
+    public async Task<IActionResult> RemoveUser(string userId, Guid roomId)
     {
         var user = await _userManager.GetUserAsync(User);
-        
         if (user == null)
-            return Unauthorized(); // User not authenticated
-        
+            return Json(new { success = false, message = "Unauthorized" });
+
         try
         {
-            // Check if the user is the owner of the room
             var room = await _roomService.GetRoomByIdAsync(roomId);
-            
             if (room.OwnerId != user.Id)
-            {
-                return Forbid();
-            }
-            
+                return Json(new { success = false, message = "Forbidden" });
+
             await _roomService.RemoveUserFromRoomAsync(userId, roomId);
-            return RedirectToAction("Index"); // Redirect to the index
+            return Json(new { success = true });
         }
         catch (InvalidOperationException e)
         {
-            return NotFound(e.Message);
+            return Json(new { success = false, message = "Not Found" });
         }
     }
 }

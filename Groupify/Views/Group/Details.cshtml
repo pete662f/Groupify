@@ -1,0 +1,25 @@
+﻿@model Groupify.ViewModels.Group.DetailsGroupViewModel
+
+
+@{
+    ViewData["Title"] = "Group Details";
+}
+
+<div class="row text-center">
+    <h2>Your group for @Model.Group.Room.Id</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3 class="text-center">Members</h3>
+        <ul>
+            @foreach (var user in Model.Group.Users)
+            {
+                <li>@user.UserName - Wheel position: @user.Insight?.WheelPosition</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center">Average Energy's</h3>
+    </div>
+</div>

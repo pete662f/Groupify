@@ -29,7 +29,13 @@
         <ul>
             @foreach (var user in Model.RoomDetails.Room.Users)
             {
-                <li>@user.UserName</li>
+                <li>
+                    @user.UserName |
+                    <button class="btn btn-link btn-sm text-danger p-0 small text-decoration-none"
+                            onclick="removeUser('@Model.RoomDetails.Room.Id', '@user.Id', this)">
+                        Remove
+                    </button>
+                </li>
             }
         </ul>
     </div>
@@ -61,3 +67,36 @@
         </ul>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function removeUser(roomId, userId, button) {
+            if (!confirm('Are you sure you want to remove this user from the room?')) {
+                return;
+            }
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            
+            fetch(`/Room/RemoveUser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: `userId=${userId}&roomId=${roomId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.closest('li').remove();
+                } else {
+                    alert(data.message || 'Failed to remove user');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error removing user');
+            });
+        }
+    </script>
+}

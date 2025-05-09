@@ -103,6 +103,19 @@ public class GroupService
 
         return groups;
     }
+    
+    public async Task<Group> GetGroupByIdAsync(Guid groupId)
+    {
+        var group = await _context.Groups
+            .Include(g => g.Users)
+            .ThenInclude(u => u.Insight)
+            .FirstOrDefaultAsync(g => g.Id == groupId);
+
+        if (group == null)
+            throw new InvalidOperationException("Group not found");
+
+        return group;
+    }
 
     public async Task CreateGroupsAsync(Guid roomId, int groupSize)
     {
