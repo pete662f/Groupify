@@ -173,10 +173,12 @@ public class GroupService
         groups = SwapOptimization(groups, globalAverage, iterations:100);
         
         // Create group entities
+        int groupIndex = 0;
         foreach (List<ApplicationUser> group in groups)
         {
             var newGroup = new Group
             {
+                GroupNumber = groupIndex,
                 RoomId = roomId,
                 Users = group.ToList()
             };
@@ -188,6 +190,8 @@ public class GroupService
             {
                 user.Groups.Add(newGroup);
             }
+
+            groupIndex++;
         }
         
         await _context.SaveChangesAsync();

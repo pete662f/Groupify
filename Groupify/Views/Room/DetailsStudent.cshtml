@@ -37,7 +37,11 @@
         <ul>
             @foreach (var group in Model.RoomDetails.Groups)
             {
-                <li>@group.Id</li>
+                <li>
+                    <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
+                        Group @group.GroupNumber
+                    </a>
+                </li>
                 <ul>
                     @foreach (var user in group.Users)
                     {
