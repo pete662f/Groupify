@@ -41,12 +41,12 @@
     </div>
     <div class="col-md-4">
         <h3 class="text-center">Create Groups</h3>
-        <form method="post" asp-action="CreateGroups">
-            <input type="hidden" asp-for="CreateGroup.RoomId" value="@Model.RoomDetails.Room.Id" />
+        <form id="createGroupsForm" onsubmit="createGroups(event)">
+            <input type="hidden" name="CreateGroup.RoomId" value="@Model.RoomDetails.Room.Id" />
             <div class="form-group">
-                <label asp-for="CreateGroup.GroupSize"></label>
-                <input asp-for="CreateGroup.GroupSize" type="number" class="form-control"/>
-                <span asp-validation-for="CreateGroup.GroupSize" class="text-danger"></span>
+                <label for="groupSize">Group Size</label>
+                <input name="CreateGroup.GroupSize" type="number" class="form-control" id="groupSize"/>
+                <span class="text-danger" id="createGroupsError"></span>
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
@@ -70,6 +70,40 @@
 
 @section Scripts {
     <script>
+        function createGroups(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const errorSpan = document.getElementById('createGroupsError');
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            // Clear previous errors
+            errorSpan.textContent = '';
+            
+            fetch('/Room/CreateGroups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: new URLSearchParams(new FormData(form))
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        console.log(data.errors);
+                        console.log(data.message);
+                        errorSpan.textContent = data.message || 'Failed to create groups';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorSpan.textContent = 'Error creating groups';
+                });
+        }
+        
         function removeUser(roomId, userId, button) {
             if (!confirm('Are you sure you want to remove this user from the room?')) {
                 return;
@@ -98,5 +132,6 @@
                 alert('Error removing user');
             });
         }
+    
     </script>
 }

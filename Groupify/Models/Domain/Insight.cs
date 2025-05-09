@@ -9,13 +9,25 @@ public class Insight
     [Key, ForeignKey(nameof(ApplicationUser))]
     public string ApplicationUserId { get; set; } = null!;
 
+    // Insight color energies 0 to 6
+    [Required]
+    [Range(0, 6)]
     public int Red { get; set; }
+    [Required]
+    [Range(0, 6)]
     public int Green { get; set; }
+    [Required]
+    [Range(0, 6)]
     public int Blue { get; set; }
+    [Required]
+    [Range(0, 6)]
     public int Yellow { get; set; }
+    
+    // Insight wheel position
+    [Required]
     public int WheelPosition { get; set; }
  
     public Vector<float> ToVector() => new Vector<float>(new float[]{ Red, Green, Blue, Yellow });
 
-    public virtual ApplicationUser ApplicationUser { get; set; } = null!;
+    public ApplicationUser ApplicationUser { get; set; } = null!;
 }

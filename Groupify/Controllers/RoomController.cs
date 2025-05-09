@@ -56,40 +56,37 @@ public class RoomController : Controller
     
     [HttpPost]
     [Authorize(Roles = "Teacher")]
-    public async Task<IActionResult> CreateGroups(CompositeRoomViewModel  vm)
+    public async Task<IActionResult> CreateGroups(CompositeRoomViewModel vm)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
-            return Unauthorized(); // User not authenticated
-        
+            return Json(new { success = false, message = "Unauthorized" });
+
         var room = await _roomService.GetRoomByIdAsync(vm.CreateGroup.RoomId);
         if (room == null)
-            return NotFound();
-            
+            return Json(new { success = false, message = "Room not found" });
+
         bool isOwner = room.OwnerId == user.Id;
         if (!isOwner)
-            return Forbid();
-        
+            return Json(new { success = false, message = "Forbidden" });
+
         if (!ModelState.IsValid)
         {
-            // **Repopulate only the RoomDetails** so the view has what it needs
-            vm.RoomDetails = new DetailsRoomViewModel {
-                Room   = room,
-                Groups = room.Groups
-            };
-            return View("DetailsTeacher", vm);
+            var error = ModelState.Values
+                .SelectMany(v => v?.Errors ?? [])
+                .FirstOrDefault()?.ErrorMessage ?? "Invalid input";
+            return Json(new { success = false, message = error });
         }
 
         try
         {
             await _groupService.CreateGroupsAsync(vm.CreateGroup.RoomId, vm.CreateGroup.GroupSize);
+            return Json(new { success = true });
         }
         catch (Exception e)
         {
-            return NotFound(e.Message);
+            return Json(new { success = false, message = e.Message });
         }
-        
-        return RedirectToAction(nameof(Details), new { vm.CreateGroup.RoomId });
     }
     
     [HttpGet("/room/show/{roomId}")]
@@ -134,6 +131,9 @@ public class RoomController : Controller
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
             return Unauthorized(); // User not authenticated
+        
+        if (user.Insight == null)
+            return BadRequest("You need to create an insight before joining a room.");
         
         try
         {
@@ -290,7 +290,7 @@ public class RoomController : Controller
         }
         catch (InvalidOperationException e)
         {
-            return Json(new { success = false, message = "Not Found" });
+            return Json(new { success = false, message = e.Message });
         }
     }
 }
