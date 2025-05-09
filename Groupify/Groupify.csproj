@@ -21,4 +21,13 @@
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap-icons\fonts\bootstrap-icons.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap-icons\fonts\bootstrap-icons.woff2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\lib\bootstrap-icons\" />
+    </ItemGroup>
+
 </Project>

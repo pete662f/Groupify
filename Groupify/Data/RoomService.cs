@@ -97,6 +97,9 @@ public async Task AddUserToRoomAsync(string userId, Guid roomId)
 
     public async Task ChangeRoomNameAsync(Guid roomId, string newName)
     {
+        if (string.IsNullOrWhiteSpace(newName) || newName.Length < 2)
+            throw new ArgumentException("Room name must be at least 2 characters long");
+            
         var room = await _context.Rooms
             .FirstOrDefaultAsync(r => r.Id == roomId);
         
@@ -104,6 +107,8 @@ public async Task AddUserToRoomAsync(string userId, Guid roomId)
             throw new InvalidOperationException("Room not found");
         
         room.Name = newName;
+        
+        await _context.SaveChangesAsync();
     }
     
     public async Task<Guid> CreateRoomAsync(string roomName, string userId)

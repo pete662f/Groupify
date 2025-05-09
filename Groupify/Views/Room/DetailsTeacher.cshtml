@@ -20,7 +20,18 @@
 }
 
 <div class="row text-center">
-    <h2>@Model.RoomDetails.Room.Name</h2>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex align-items-center">
+            <h2 id="roomName" class="mb-0 cursor-pointer" onclick="toggleRoomNameEdit()">@Model.RoomDetails.Room.Name</h2>
+            <input type="text" id="roomNameInput" class="h2-input d-none form-control-plaintext"
+                   value="@Model.RoomDetails.Room.Name"
+                   onblur="updateRoomName()"
+                   onkeydown="if(event.key === 'Enter') this.blur();" />
+            <button class="btn btn-link p-0 ms-2" onclick="toggleRoomNameEdit()">
+                <i class="bi bi-pencil-fill text-dark"></i>
+            </button>
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -74,6 +85,56 @@
 
 @section Scripts {
     <script>
+        function toggleRoomNameEdit() {
+            const displayElement = document.getElementById('roomName');
+            const input = document.getElementById('roomNameInput');
+
+            displayElement.classList.add('d-none');
+            input.classList.remove('d-none');
+
+            // Set initial width to match the display element
+            input.style.width = displayElement.offsetWidth + 'px';
+            input.value = displayElement.textContent.trim();
+            input.focus();
+        }
+
+        function updateRoomName() {
+            const input = document.getElementById('roomNameInput');
+            const displayElement = document.getElementById('roomName');
+            const newName = input.value.trim();
+
+            if (newName === '') {
+                displayElement.classList.remove('d-none');
+                input.classList.add('d-none');
+                return;
+            }
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const roomId = '@Model.RoomDetails.Room.Id';
+
+            fetch('/Room/UpdateName', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `roomId=${roomId}&newName=${encodeURIComponent(newName)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayElement.textContent = newName;
+                        displayElement.classList.remove('d-none');
+                        input.classList.add('d-none');
+                    } else {
+                        alert(data.message || 'Failed to update room name');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error updating room name');
+                });
+        }
+        
         function createGroups(event) {
             event.preventDefault();
 
@@ -136,6 +197,7 @@
                 alert('Error removing user');
             });
         }
+    
     
     </script>
 }

@@ -217,29 +217,28 @@ public class RoomController : Controller
 
     [HttpPost]
     [Authorize(Roles = "Teacher")]
-    public async Task<IActionResult> ChangeRoomName(Guid roomId, string newName)
+    public async Task<IActionResult> UpdateName(ChangeRoomNameViewModel vm)
     {
         var user = await _userManager.GetUserAsync(User);
         
         if (user == null)
-            return Unauthorized(); // User not authenticated
+            return Json(new {sucess = false, message = "Unauthorized"});
         
         try
         {
             // Check if the user is the owner of the room
-            var room = await _roomService.GetRoomByIdAsync(roomId);
+            var room = await _roomService.GetRoomByIdAsync(vm.RoomId);
             
             if (room.OwnerId != user.Id)
-            {
-                return Forbid();
-            }
+                return Json(new {sucess = false, message = "Forbid"});
             
-            await _roomService.ChangeRoomNameAsync(roomId, newName);
-            return RedirectToAction("Index"); // Redirect to the index
+            Console.WriteLine("Name: " + vm.NewName);
+            await _roomService.ChangeRoomNameAsync(vm.RoomId, vm.NewName);
+            return Json(new { success = true });
         }
         catch (InvalidOperationException e)
         {
-            return NotFound(e.Message);
+            return Json(new { success = false, message = e.Message });
         }
     }
     

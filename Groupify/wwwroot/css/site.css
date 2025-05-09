@@ -29,3 +29,25 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.h2-input {
+  border: none;
+  background: transparent;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 0;
+  text-align: left;
+  padding: 0;
+  color: #000001;
+  min-width: 50px;
+}
+
+.h2-input:focus {
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+}
