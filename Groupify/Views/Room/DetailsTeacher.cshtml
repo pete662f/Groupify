@@ -24,7 +24,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <h3 class="text-center">Users</h3>
         <ul>
             @foreach (var user in Model.RoomDetails.Room.Users)
@@ -33,7 +33,7 @@
             }
         </ul>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <h3 class="text-center">Create Groups</h3>
         <form method="post" asp-action="CreateGroups">
             <input type="hidden" asp-for="CreateGroup.RoomId" value="@Model.RoomDetails.Room.Id" />
@@ -45,7 +45,7 @@
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <h3 class="text-center">Groups</h3>
         <ul>
             @foreach (var group in Model.RoomDetails.Groups)
