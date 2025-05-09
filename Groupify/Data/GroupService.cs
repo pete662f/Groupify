@@ -13,7 +13,8 @@ public class GroupService
         _context = context;
     }
     
-    private Vector<float> AverageVectorOfUsers(List<ApplicationUser> users)
+    // This method are used to calculate the average Insight energies of a list of users
+    private Vector<float> CalculateAverageInsightVector(List<ApplicationUser> users)
     {
         Vector<float> sum = new Vector<float>(4);
         foreach (var user in users)
@@ -47,16 +48,16 @@ public class GroupService
             var user2 = groups[group2][index2];
             
             // Calculate the score before the swap
-            var originalScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group1]), globalAverage)));
-            var originalScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group2]), globalAverage)));
+            var originalScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group1]), globalAverage)));
+            var originalScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group2]), globalAverage)));
             
             // Swap users
             groups[group1][index1] = user2;
             groups[group2][index2] = user1;
             
             // Calculate the score after the swap
-            var newScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group1]), globalAverage)));
-            var newScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(AverageVectorOfUsers(groups[group2]), globalAverage)));
+            var newScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group1]), globalAverage)));
+            var newScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group2]), globalAverage)));
             
             // If the swap improved the score, keep it else swap back
             if (newScore1 + newScore2 >= originalScore1 + originalScore2)
@@ -85,7 +86,7 @@ public class GroupService
 
                 // Make a copy of the group and add the user to it (this is slightly inefficient)
                 var tempGroup = new List<ApplicationUser>(groups[i]) { user };
-                var average = AverageVectorOfUsers(tempGroup);
+                var average = CalculateAverageInsightVector(tempGroup);
                 var difference = Vector.Abs(Vector.Add(average, globalAverage));
                 var score = (int)Vector.Sum(difference); 
                 
@@ -102,6 +103,19 @@ public class GroupService
         }
 
         return groups;
+    }
+    
+    public async Task<Vector<float>> GroupInsightAsync(Guid groupId)
+    {
+        var group = await _context.Groups
+            .Include(g => g.Users)
+            .ThenInclude(u => u.Insight)
+            .FirstOrDefaultAsync(g => g.Id == groupId);
+
+        if (group == null)
+            throw new InvalidOperationException("Group not found");
+
+        return CalculateAverageInsightVector(group.Users.ToList());
     }
     
     public async Task<Group> GetGroupByIdAsync(Guid groupId)
@@ -147,7 +161,7 @@ public class GroupService
         // Begin creating groups //
         var users = room.Users.ToList();
         
-        Vector<float> globalAverage = AverageVectorOfUsers(users);
+        Vector<float> globalAverage = CalculateAverageInsightVector(users);
         
         // Sort based on total Insight values
         users.Sort((u1, u2) =>

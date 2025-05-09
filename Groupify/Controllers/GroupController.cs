@@ -45,7 +45,9 @@ public class GroupController : Controller
         var vm = new DetailsGroupViewModel
         {
             Group = group,
-            Users = await _userManager.Users.ToListAsync()
+            Users = await _userManager.Users.ToListAsync(),
+            // TODO: Replace with IEnergies interface or something to access the 4 colors by name
+            GroupInsight = await _groupService.GroupInsightAsync(group.Id)
         };
         
         return View(vm);
