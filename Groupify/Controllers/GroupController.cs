@@ -1,7 +1,10 @@
 ﻿using Groupify.Data;
 using Groupify.Models.Identity;
+using Groupify.ViewModels.Group;
+using Groupify.ViewModels.Room;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace Groupify.Controllers;
 
@@ -14,15 +17,6 @@ public class GroupController : Controller
     {
         _groupService = groupService;
         _userManager = userManager;
-    }
-    
-    // TODO: This function should be moved to another controller or updated to use a different method
-    [HttpPost]
-    public async Task<IActionResult> CreateGroops(Guid roomId, int groupSize)
-    {
-        await _groupService.CreateGroupsAsync(roomId, groupSize);
-        
-        return RedirectToAction("Index");
     }
     
     // GET

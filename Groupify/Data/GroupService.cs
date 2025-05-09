@@ -118,15 +118,18 @@ public class GroupService
         if (room.Groups.Any())
             throw new InvalidOperationException("Groups already exist in this room");
 
-        if (groupSize <= 2)
-            throw new ArgumentException("Group size must be greater than 2");
+        if (groupSize < 2)
+            throw new ArgumentException("Group size must be 2 or more");
         
         // Minimum is one full group plus at least 2 people for another group
         if (room.Users.Count < groupSize + 2)
-            throw new InvalidOperationException($"Need at least {groupSize + 2} users to create meaningful groups (one of size {groupSize} and one of at least 2 people)");
+            throw new InvalidOperationException($"Need at least {groupSize + 2} users to create meaningful groups (one of {groupSize} people and one of at least 2 people)");
         
         if (room.Users.Any(u => u.Insight == null))
             throw new InvalidOperationException("All users must have an Insight profile to create groups");
+        
+        
+        Console.WriteLine("Creating groups for room: " + room.Name);
         
         // Begin creating groups //
         var users = room.Users.ToList();
