@@ -27,6 +27,7 @@ public class ApplicationUser : IdentityUser
             Green = 0,
             Blue = 0,
             Yellow = 0,
+            WheelPosition = 0,
             ApplicationUser = this,
         };
         

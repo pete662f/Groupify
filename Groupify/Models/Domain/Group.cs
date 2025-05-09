@@ -9,6 +9,10 @@ public class Group
     public Guid Id { get; private set; } = Guid.NewGuid();
     
     [Required]
+    [Range(1, int.MaxValue, ErrorMessage = "Group number must be greater than 0")]
+    public int GroupNumber { get; set; }
+    
+    [Required]
     public Guid RoomId { get; set; }
     public Room Room { get; set; } = null!;
     
