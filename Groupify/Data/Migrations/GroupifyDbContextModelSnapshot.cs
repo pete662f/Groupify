@@ -71,20 +71,20 @@ namespace Groupify.Data.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Blue")
-                        .HasColumnType("INTEGER");
+                    b.Property<float>("Blue")
+                        .HasColumnType("REAL");
 
-                    b.Property<int>("Green")
-                        .HasColumnType("INTEGER");
+                    b.Property<float>("Green")
+                        .HasColumnType("REAL");
 
-                    b.Property<int>("Red")
-                        .HasColumnType("INTEGER");
+                    b.Property<float>("Red")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("WheelPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Yellow")
-                        .HasColumnType("INTEGER");
+                    b.Property<float>("Yellow")
+                        .HasColumnType("REAL");
 
                     b.HasKey("ApplicationUserId");
 

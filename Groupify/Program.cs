@@ -63,6 +63,7 @@ app.MapRazorPages()
     .WithStaticAssets();
 
 // Seed data
+System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 await SeedData.InitializeAsync(scope.ServiceProvider);
 
 app.Run();

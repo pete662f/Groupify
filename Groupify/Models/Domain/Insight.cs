@@ -12,16 +12,16 @@ public class Insight
     // Insight color energies 0 to 6
     [Required]
     [Range(0, 6, ErrorMessage="Energy must be between 0 and 6")]
-    public int Red { get; set; }
+    public float Red { get; set; }
     [Required]
     [Range(0, 6, ErrorMessage="Energy must be between 0 and 6")]
-    public int Green { get; set; }
+    public float Green { get; set; }
     [Required]
     [Range(0, 6, ErrorMessage="Energy must be between 0 and 6")]
-    public int Blue { get; set; }
+    public float Blue { get; set; }
     [Required]
     [Range(0, 6, ErrorMessage="Energy must be between 0 and 6")]
-    public int Yellow { get; set; }
+    public float Yellow { get; set; }
     
     // Insight wheel position
     [Required]
