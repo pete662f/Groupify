@@ -76,7 +76,6 @@ public class RoomService
         await _context.SaveChangesAsync();
     }
     
-    // TODO: Remove user from Group when removing from room
     public async Task RemoveUserFromRoomAsync(string userId, Guid roomId)
     {
         var user = await _userManager.FindByIdAsync(userId);
@@ -86,12 +85,22 @@ public class RoomService
         var room = await _context.Rooms
             .Include(r => r.Users)
             .FirstOrDefaultAsync(r => r.Id == roomId);
-        
         if (room == null)
             throw new InvalidOperationException("Room not found");
-        
         if (!room.Users.Contains(user))
             throw new InvalidOperationException("User not in room");
+        
+        var group = await _context.Groups
+            .Include(g => g.Users)
+            .FirstOrDefaultAsync(g => g.RoomId == roomId && g.Users.Contains(user));
+        if (group != null)
+        {
+            group.Users.Remove(user);
+            if (group.Users.Count == 0)
+            {
+                _context.Groups.Remove(group);
+            }
+        }
         
         room.Users.Remove(user);
         await _context.SaveChangesAsync();
