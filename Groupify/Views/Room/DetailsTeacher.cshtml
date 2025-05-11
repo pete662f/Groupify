@@ -55,6 +55,12 @@
     </div>
 </div>
 
+<div class="row justify-content-center mt-3 mb-3">
+    <div class="col-auto">
+        <button class="btn btn-danger" onclick="deleteRoom(event)">Delete</button>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         function toggleRoomNameEdit() {
@@ -165,6 +171,38 @@
             .catch(error => {
                 console.error('Error:', error);
                 alert('Error removing user');
+            });
+        }
+        
+        function deleteRoom(event) {
+            event.preventDefault();
+
+            if (!confirm('Are you sure you want to delete this room?')) {
+                return;
+            }
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const roomId = '@Model.RoomDetails.Room.Id';
+
+            fetch(`/Room/Delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: `roomId=${roomId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/Room/Index';
+                } else {
+                    alert(data.message || 'Failed to delete room');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting room');
             });
         }
     

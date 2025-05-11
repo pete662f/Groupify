@@ -257,4 +257,27 @@ public class RoomController : Controller
             return Json(new { success = false, message = e.Message });
         }
     }
+
+    [HttpPost]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> Delete(Guid roomId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Json(new { success = false, message = "Unauthorized" });
+
+        try
+        {
+            var room = await _roomService.GetRoomByIdAsync(roomId);
+            if (room.OwnerId != user.Id)
+                return Json(new { success = false, message = "Forbidden" });
+
+            await _roomService.RemoveRoomAsync(roomId, user.Id);
+            return Json(new { success = true });
+        }
+        catch (InvalidOperationException e)
+        {
+            return Json(new { success = false, message = e.Message });
+        }
+    }
 }
