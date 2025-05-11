@@ -37,7 +37,6 @@ public class GroupController : Controller
         return Redirect("/groups");
     }
     
-    // TODO: Fix teacher not having access to student groups
     [HttpGet("/group/{id}")]
     [Authorize(Roles = "Teacher, Student")]
     public async Task<IActionResult> Details(Guid id)
@@ -56,7 +55,8 @@ public class GroupController : Controller
         
         // Check if the user is part of the room
         var isUserInRoom = room.Users.Any(u => u.Id == user.Id);
-        if (!isUserInRoom)
+        var isUserOwner = room.OwnerId == user.Id;
+        if (!isUserInRoom && !isUserOwner)
             return Forbid();
         
         var vm = new DetailsGroupViewModel
@@ -96,6 +96,10 @@ public class GroupController : Controller
 
         try
         {
+            // Remove all groups in the room before creating new ones
+            await _groupService.RemoveAllGroupsByRoomIdAsync(vm.CreateGroup.RoomId);
+            
+            // Create new groups
             await _groupService.CreateGroupsAsync(vm.CreateGroup.RoomId, vm.CreateGroup.GroupSize);
             return Json(new { success = true });
         }
