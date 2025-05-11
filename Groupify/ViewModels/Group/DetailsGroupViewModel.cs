@@ -8,5 +8,5 @@ public class DetailsGroupViewModel
 {
     public Models.Domain.Group Group { get; set; } = null!;
     public IEnumerable<Models.Identity.ApplicationUser> Users { get; set; } = Array.Empty<Models.Identity.ApplicationUser>();
-    public Vector<float> GroupInsight { get; set; } = new Vector<float>(new float[]{ 0, 0, 0, 0 });
+    public Vector4 GroupInsight { get; set; } = Vector4.Zero;
 }

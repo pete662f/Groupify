@@ -27,7 +27,7 @@ public class Insight
     [Required]
     public int WheelPosition { get; set; }
  
-    public Vector<float> ToVector() => new Vector<float>(new float[]{ Red, Green, Blue, Yellow });
+    public Vector4 ToVector4() => new Vector4(Red, Green, Blue, Yellow );
 
     public ApplicationUser ApplicationUser { get; set; } = null!;
 }

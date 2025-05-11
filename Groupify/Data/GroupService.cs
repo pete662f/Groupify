@@ -2,6 +2,8 @@
 using Groupify.Models.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
+using Groupify.Extensions;
+
 namespace Groupify.Data;
 
 public class GroupService
@@ -14,19 +16,23 @@ public class GroupService
     }
     
     // This method are used to calculate the average Insight energies of a list of users
-    private Vector<float> CalculateAverageInsightVector(List<ApplicationUser> users)
+    private Vector4 CalculateAverageInsightVector4(List<ApplicationUser> users)
     {
-        Vector<float> sum = new Vector<float>(4);
+        if (users == null || users.Count == 0)
+            throw new InvalidOperationException("Users list cannot be null or empty");
+
+        Vector4 sum = Vector4.Zero;
         foreach (var user in users)
         {
             if (user.Insight == null)
                 throw new InvalidOperationException("All users must have an Insight profile");
-            sum = Vector.Add(sum, user.Insight.ToVector());
+            
+            sum = Vector4.Add(sum, user.Insight.ToVector4());
         }
-        return Vector.Divide(sum, users.Count());
+        return Vector4.Divide(sum, users.Count());
     }
     
-    private List<List<ApplicationUser>> SwapOptimization(List<List<ApplicationUser>> groups, Vector<float> globalAverage, int iterations)
+    private List<List<ApplicationUser>> SwapOptimization(List<List<ApplicationUser>> groups, Vector4 globalAverage, int iterations)
     {
         for (int i = 0; i < iterations; i++)
         {
@@ -41,6 +47,9 @@ public class GroupService
             // Check if groups exist
             if (!groups[group1].Any() || !groups[group2].Any()) continue;
             
+            // Check if groups are emptyz
+            if (groups[group1].Count == 0 || groups[group2].Count == 0) continue;
+            
             int index1 = Random.Shared.Next(groups[group1].Count-1);
             int index2 = Random.Shared.Next(groups[group2].Count-1);
             
@@ -48,16 +57,16 @@ public class GroupService
             var user2 = groups[group2][index2];
             
             // Calculate the score before the swap
-            var originalScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group1]), globalAverage)));
-            var originalScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group2]), globalAverage)));
+            float originalScore1 = Vector4Extensions.Sum(Vector4.Abs(Vector4.Subtract(CalculateAverageInsightVector4(groups[group1]), globalAverage)));
+            float originalScore2 = Vector4Extensions.Sum(Vector4.Abs(Vector4.Subtract(CalculateAverageInsightVector4(groups[group2]), globalAverage)));
             
             // Swap users
             groups[group1][index1] = user2;
             groups[group2][index2] = user1;
             
             // Calculate the score after the swap
-            var newScore1 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group1]), globalAverage)));
-            var newScore2 = Vector.Sum(Vector.Abs(Vector.Subtract(CalculateAverageInsightVector(groups[group2]), globalAverage)));
+            float newScore1 = Vector4Extensions.Sum(Vector4.Abs(Vector4.Subtract(CalculateAverageInsightVector4(groups[group1]), globalAverage)));
+            float newScore2 = Vector4Extensions.Sum(Vector4.Abs(Vector4.Subtract(CalculateAverageInsightVector4(groups[group2]), globalAverage)));
             
             // If the swap improved the score, keep it else swap back
             if (newScore1 + newScore2 >= originalScore1 + originalScore2)
@@ -71,7 +80,7 @@ public class GroupService
         return groups;
     }
 
-    private List<List<ApplicationUser>> GreedyGrouping(List<ApplicationUser> users, List<List<ApplicationUser>> groups, Vector<float> globalAverage, int groupSize)
+    private List<List<ApplicationUser>> GreedyGrouping(List<ApplicationUser> users, List<List<ApplicationUser>> groups, Vector4 globalAverage, int groupSize)
     {
         
         
@@ -86,9 +95,9 @@ public class GroupService
 
                 // Make a copy of the group and add the user to it (this is slightly inefficient)
                 var tempGroup = new List<ApplicationUser>(groups[i]) { user };
-                var average = CalculateAverageInsightVector(tempGroup);
-                var difference = Vector.Abs(Vector.Add(average, globalAverage));
-                var score = (int)Vector.Sum(difference); 
+                Vector4 average = CalculateAverageInsightVector4(tempGroup);
+                Vector4 difference = Vector4.Abs(Vector4.Add(average, globalAverage));
+                int score = (int)Vector4Extensions.Sum(difference); 
                 
                 // Lower score is better
                 if (score >= bestScore) continue;
@@ -105,7 +114,7 @@ public class GroupService
         return groups;
     }
     
-    public async Task<Vector<float>> GroupInsightAsync(Guid groupId)
+    public async Task<Vector4> GroupInsightAsync(Guid groupId)
     {
         var group = await _context.Groups
             .Include(g => g.Users)
@@ -115,7 +124,7 @@ public class GroupService
         if (group == null)
             throw new InvalidOperationException("Group not found");
 
-        return CalculateAverageInsightVector(group.Users.ToList());
+        return CalculateAverageInsightVector4(group.Users.ToList());
     }
     
     public async Task<Group> GetGroupByIdAsync(Guid groupId)
@@ -155,19 +164,16 @@ public class GroupService
         if (room.Users.Any(u => u.Insight == null))
             throw new InvalidOperationException("All users must have an Insight profile to create groups");
         
-        
-        Console.WriteLine("Creating groups for room: " + room.Name);
-        
         // Begin creating groups //
         var users = room.Users.ToList();
         
-        Vector<float> globalAverage = CalculateAverageInsightVector(users);
+        Vector4 globalAverage = CalculateAverageInsightVector4(users);
         
         // Sort based on total Insight values
         users.Sort((u1, u2) =>
         {
-            float total1 = Vector.Sum(u1.Insight!.ToVector());
-            float total2 = Vector.Sum(u2.Insight!.ToVector());
+            float total1 = Vector4Extensions.Sum(u1.Insight!.ToVector4());
+            float total2 = Vector4Extensions.Sum(u2.Insight!.ToVector4());
             return total1.CompareTo(total2);
         });
         
@@ -179,7 +185,7 @@ public class GroupService
         {
             groups.Add(new List<ApplicationUser>());
         }
-
+        
         // Greedy grouping
         groups = GreedyGrouping(users, groups, globalAverage, groupSize);
         
