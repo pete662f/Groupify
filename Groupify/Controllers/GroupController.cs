@@ -41,11 +41,22 @@ public class GroupController : Controller
     [Authorize(Roles = "Teacher, Student")]
     public async Task<IActionResult> Details(Guid id)
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized();
+        
         var group = await _groupService.GetGroupByIdAsync(id);
         if (group == null)
             return NotFound();
         
-        // TODO: Check if the user is part of the group
+        var room = await _roomService.GetRoomByIdAsync(group.RoomId);
+        if (room == null)
+            return NotFound();
+        
+        // Check if the user is part of the room
+        var isUserInRoom = room.Users.Any(u => u.Id == user.Id);
+        if (!isUserInRoom)
+            return Forbid();
         
         var vm = new DetailsGroupViewModel
         {
