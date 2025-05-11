@@ -25,14 +25,19 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
-// Configure the roles
+// Set up the database
 using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<GroupifyDbContext>();
+db.Database.Migrate();
+
+// Configure the roles
 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 foreach (var role in new[] { "Admin", "Teacher", "Student" })
 {
     if (!await roleManager.RoleExistsAsync(role))
         await roleManager.CreateAsync(new IdentityRole(role));
 }
+
 
 
 // Configure the HTTP request pipeline.
