@@ -1,4 +1,5 @@
-﻿using Groupify.Data;
+﻿using System.Numerics;
+using Groupify.Data;
 using Groupify.Models.Identity;
 using Groupify.ViewModels.Group;
 using Groupify.ViewModels.Room;
@@ -43,6 +44,8 @@ public class GroupController : Controller
         var group = await _groupService.GetGroupByIdAsync(id);
         if (group == null)
             return NotFound();
+        
+        // TODO: Check if the user is part of the group
         
         var vm = new DetailsGroupViewModel
         {

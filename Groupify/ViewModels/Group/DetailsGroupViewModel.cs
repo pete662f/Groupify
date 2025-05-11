@@ -1,6 +1,4 @@
 ﻿using System.Numerics;
-using Groupify.Models.Domain;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Groupify.ViewModels.Group;
 

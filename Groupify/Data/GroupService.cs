@@ -132,6 +132,7 @@ public class GroupService
         var group = await _context.Groups
             .Include(g => g.Users)
             .ThenInclude(u => u.Insight)
+            .Include(g => g.Room)
             .FirstOrDefaultAsync(g => g.Id == groupId);
 
         if (group == null)

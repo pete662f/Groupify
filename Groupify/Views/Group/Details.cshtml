@@ -7,7 +7,7 @@
 
 <div class="row text-center">
     <h2>
-        Group @Model.Group.GroupNumber in room
+        Group @Model.Group.GroupNumber in room:
         <a asp-action="Details" asp-route-roomId="@Model.Group.RoomId">
             @Model.Group.Room.Name
         </a>
@@ -20,17 +20,17 @@
         <ul>
             @foreach (var user in Model.Group.Users)
             {
-                <li>@user.UserName - Wheel position: @user.Insight?.WheelPosition</li>
+                <li>@user.FirstName @user.LastName - Wheel position: @user.Insight?.WheelPosition</li>
             }
         </ul>
     </div>
     <div class="col-md-6">
         <h3 class="text-center">Average Group Insights</h3>
         <ul>
-            <li>Average Wheel Red: @Model.GroupInsight[0]</li>
-            <li>Average Wheel Green: @Model.GroupInsight[1]</li>
-            <li>Average Wheel Blue: @Model.GroupInsight[2]</li>
-            <li>Average Wheel Yellow: @Model.GroupInsight[3]</li>
+            <li>Average Red: @Model.GroupInsight[0]</li>
+            <li>Average Green: @Model.GroupInsight[1]</li>
+            <li>Average Blue: @Model.GroupInsight[2]</li>
+            <li>Average Yellow: @Model.GroupInsight[3]</li>
         </ul>
     </div>
 </div>
