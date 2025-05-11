@@ -3,7 +3,7 @@
 
 <h3 class="text-center">Users</h3>
 <ul>
-    @foreach (var user in Model.RoomDetails.Room.Users)
+    @foreach (var user in Model.RoomDetails.Room.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName))
     {
         <li>
             @user.FirstName @user.LastName (@user.UserName) |

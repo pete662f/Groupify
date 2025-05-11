@@ -10,7 +10,7 @@
             </a>
         </li>
         <ul>
-            @foreach (var user in group.Users)
+            @foreach (var user in group.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName))
             {
                 <li>@user.FirstName @user.LastName</li>
             }
