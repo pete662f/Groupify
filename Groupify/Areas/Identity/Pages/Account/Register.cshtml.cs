@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Groupify.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Groupify.Models.Identity;
@@ -31,13 +32,15 @@ namespace Groupify.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly InsightService _insightService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            InsightService insightService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -45,6 +48,7 @@ namespace Groupify.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _insightService = insightService;
         }
 
         /// <summary>
@@ -144,6 +148,9 @@ namespace Groupify.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, Input.Role);
+
+                    if (await _userManager.IsInRoleAsync(user, "Student"))
+                        await _insightService.CreateInsightProfileAsync(user.Id);
                     
                     _logger.LogInformation("User created a new account with password.");
 
