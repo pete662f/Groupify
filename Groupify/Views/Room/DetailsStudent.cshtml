@@ -20,13 +20,11 @@
 }
 
 <div class="row text-center">
-    <h3 class="text-center">Best single match</h3>
-    <ol>
-        @foreach (ApplicationUser match in Model.SingleMatchs)
-        {
-            <li>@match.FirstName @match.LastName</li>
-        }
-    </ol>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex align-items-center">
+            <h2 id="roomName" class="mb-0">@Model.RoomDetails.Room.Name</h2>
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -34,7 +32,13 @@
         <partial name="_MembersList" model="@Model"/>
     </div>
     <div class="col-md-4">
-        <h3>Best single match</h3>
+        <h3 class="text-center">Best single match</h3>
+        <ol>
+            @foreach (ApplicationUser match in Model.SingleMatchs)
+            {
+                <li>@match.FirstName @match.LastName</li>
+            }
+        </ol>
     </div>
     <div class="col-md-4">
         <partial name="_GroupsList" model="Model" />
