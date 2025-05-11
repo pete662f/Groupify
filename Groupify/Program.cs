@@ -61,4 +61,7 @@ app.MapControllerRoute(
 app.MapRazorPages()
     .WithStaticAssets();
 
+// Seed data
+await SeedData.InitializeAsync(scope.ServiceProvider);
+
 app.Run();
