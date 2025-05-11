@@ -43,6 +43,19 @@ public class InsightService
         _context.Insights.Add(insight);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Insight> GetInsightByUserIdAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+        
+        var insight = await _context.Insights.FindAsync(userId);
+        if (insight == null)
+            throw new InvalidOperationException("Insight not found");
+        
+        return insight;
+    }
     
     public async Task UpdateInsightAsync(string userId, Insight insight)
     {
