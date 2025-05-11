@@ -50,7 +50,7 @@ public class SeedData
         }
          
         // Create 20 students and add them to a room
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 60; i++)
         {
             string studentEmail = $"student{i}@demo.com";
             const string studentPassword = "P@$$w0rd";
@@ -84,7 +84,7 @@ public class SeedData
                     };
                     
                     // Read the xlsx file and populate the insight profile
-                    await using (var xStream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    await using (var xStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         using (var reader = ExcelReaderFactory.CreateReader(xStream))
                         {
@@ -107,8 +107,6 @@ public class SeedData
                                 insight.Yellow = Convert.ToSingle(row[2]);
                                 insight.Red = Convert.ToSingle(row[3]);
                                 insight.WheelPosition = Convert.ToInt32(row[4]);
-            
-                                logger.LogInformation($"Read values: Red={insight.Red}, Blue={insight.Blue}, Green={insight.Green}, Yellow={insight.Yellow}, Wheel={insight.WheelPosition}");
                             }
                         }
                     }
