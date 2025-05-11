@@ -1,4 +1,5 @@
-﻿@model Groupify.ViewModels.Room.CompositeRoomViewModel
+﻿@using Groupify.Models.Identity
+@model Groupify.ViewModels.Room.CompositeRoomViewModel
 
 @{
     ViewData["Title"] = "Room Details";
@@ -19,14 +20,23 @@
 }
 
 <div class="row text-center">
-    <h2>@Model.RoomDetails.Room.Name</h2>
+    <h2>Best single match</h2>
+    <ol>
+        @foreach (ApplicationUser match in Model.SingleMatchs)
+        {
+            <li>@match.FirstName @match.LastName</li>
+        }
+    </ol>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <partial name="_MembersList" model="@Model"/>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <h3>Best single match</h3>
+    </div>
+    <div class="col-md-4">
         <partial name="_GroupsList" model="Model" />
     </div>
 </div>
