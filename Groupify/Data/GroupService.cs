@@ -91,7 +91,7 @@ public class GroupService
             
             for (int i = 0; i < groups.Count; i++)
             {
-                if (groups[i].Count > groupSize) continue;
+                if (groups[i].Count >= groupSize) continue;
 
                 // Make a copy of the group and add the user to it (this is slightly inefficient)
                 var tempGroup = new List<ApplicationUser>(groups[i]) { user };
