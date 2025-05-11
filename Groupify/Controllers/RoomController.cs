@@ -54,41 +54,6 @@ public class RoomController : Controller
         return Redirect("/rooms");
     }
     
-    [HttpPost]
-    [Authorize(Roles = "Teacher")]
-    public async Task<IActionResult> CreateGroups(CompositeRoomViewModel vm)
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-            return Json(new { success = false, message = "Unauthorized" });
-
-        var room = await _roomService.GetRoomByIdAsync(vm.CreateGroup.RoomId);
-        if (room == null)
-            return Json(new { success = false, message = "Room not found" });
-
-        bool isOwner = room.OwnerId == user.Id;
-        if (!isOwner)
-            return Json(new { success = false, message = "Forbidden" });
-
-        if (!ModelState.IsValid)
-        {
-            var error = ModelState.Values
-                .SelectMany(v => v?.Errors ?? [])
-                .FirstOrDefault()?.ErrorMessage ?? "Invalid input";
-            return Json(new { success = false, message = error });
-        }
-
-        try
-        {
-            await _groupService.CreateGroupsAsync(vm.CreateGroup.RoomId, vm.CreateGroup.GroupSize);
-            return Json(new { success = true });
-        }
-        catch (Exception e)
-        {
-            return Json(new { success = false, message = e.Message });
-        }
-    }
-    
     [HttpGet("/room/show/{roomId}")]
     [Authorize(Roles = "Teacher, Student")]
     public async Task<IActionResult> Details(Guid roomId)

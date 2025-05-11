@@ -19,8 +19,9 @@ public class RoomService
     public async Task<Room> GetRoomByIdAsync(Guid roomId)
     {
         var room = await _context.Rooms
-            .Include(r => r.Users)    // <— bring back the Users M:N nav‐prop
-            .Include(r => r.Groups)   // <— if you also want Groups
+            .Include(r => r.Users)   
+            .Include(r => r.Groups)
+            .ThenInclude(g => g.Users)
             .FirstOrDefaultAsync(r => r.Id == roomId);
 
         if (room == null)

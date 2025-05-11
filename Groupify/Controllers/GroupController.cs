@@ -13,11 +13,13 @@ namespace Groupify.Controllers;
 public class GroupController : Controller
 {
     private readonly GroupService _groupService;
+    private readonly RoomService _roomService;
     private readonly UserManager<ApplicationUser> _userManager;
     
-    public GroupController(GroupService groupService, UserManager<ApplicationUser> userManager)
+    public GroupController(GroupService groupService, RoomService roomService, UserManager<ApplicationUser> userManager)
     {
         _groupService = groupService;
+        _roomService = roomService;
         _userManager = userManager;
     }
     
@@ -51,5 +53,40 @@ public class GroupController : Controller
         };
         
         return View(vm);
+    }
+    
+    [HttpPost("/group/create")]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> CreateGroups(CompositeRoomViewModel vm)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Json(new { success = false, message = "Unauthorized" });
+
+        var room = await _roomService.GetRoomByIdAsync(vm.CreateGroup.RoomId);
+        if (room == null)
+            return Json(new { success = false, message = "Room not found" });
+
+        bool isOwner = room.OwnerId == user.Id;
+        if (!isOwner)
+            return Json(new { success = false, message = "Forbidden" });
+
+        if (!ModelState.IsValid)
+        {
+            var error = ModelState.Values
+                .SelectMany(v => v?.Errors ?? [])
+                .FirstOrDefault()?.ErrorMessage ?? "Invalid input";
+            return Json(new { success = false, message = error });
+        }
+
+        try
+        {
+            await _groupService.CreateGroupsAsync(vm.CreateGroup.RoomId, vm.CreateGroup.GroupSize);
+            return Json(new { success = true });
+        }
+        catch (Exception e)
+        {
+            return Json(new { success = false, message = e.Message });
+        }
     }
 }

@@ -65,7 +65,7 @@
     <div class="col-md-4">
         <h3 class="text-center">Groups</h3>
         <ul>
-            @foreach (var group in Model.RoomDetails.Groups)
+            @foreach (var group in Model.RoomDetails.Groups.OrderBy(g => g.GroupNumber))
             {
                 <li>
                     <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
@@ -75,7 +75,7 @@
                 <ul>
                     @foreach (var user in group.Users)
                     {
-                        <li>@user.UserName</li>
+                        <li>@user.FirstName</li>
                     }
                 </ul>
             }
@@ -145,7 +145,7 @@
             // Clear previous errors
             errorSpan.textContent = '';
             
-            fetch('/Room/CreateGroups', {
+            fetch('/group/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -158,8 +158,6 @@
                     if (data.success) {
                         location.reload();
                     } else {
-                        console.log(data.errors);
-                        console.log(data.message);
                         errorSpan.textContent = data.message || 'Failed to create groups';
                     }
                 })

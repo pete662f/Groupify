@@ -198,7 +198,7 @@ public class GroupService
         {
             var newGroup = new Group
             {
-                GroupNumber = groupIndex,
+                GroupNumber = groupIndex+1, // 1-based index
                 RoomId = roomId,
                 Users = group.ToList()
             };
