@@ -56,26 +56,27 @@ public class RoomService
         return rooms;
     }
     
-public async Task AddUserToRoomAsync(string userId, Guid roomId)
-{
-    var user = await _userManager.FindByIdAsync(userId);
-    if (user == null)
-        throw new InvalidOperationException("User not found");
+    public async Task AddUserToRoomAsync(string userId, Guid roomId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+        
+        var room = await _context.Rooms
+            .Include(r => r.Users)
+            .FirstOrDefaultAsync(r => r.Id == roomId);
+        
+        if (room == null)
+            throw new InvalidOperationException("Room not found");
+        
+        if (room.Users.Contains(user))
+            throw new InvalidOperationException("User already in room");
+        
+        room.Users.Add(user);
+        await _context.SaveChangesAsync();
+    }
     
-    var room = await _context.Rooms
-        .Include(r => r.Users)
-        .FirstOrDefaultAsync(r => r.Id == roomId);
-    
-    if (room == null)
-        throw new InvalidOperationException("Room not found");
-    
-    if (room.Users.Contains(user))
-        throw new InvalidOperationException("User already in room");
-    
-    room.Users.Add(user);
-    await _context.SaveChangesAsync();
-}
-    
+    // TODO: Remove user from Group when removing from room
     public async Task RemoveUserFromRoomAsync(string userId, Guid roomId)
     {
         var user = await _userManager.FindByIdAsync(userId);

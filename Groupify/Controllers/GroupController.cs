@@ -37,6 +37,7 @@ public class GroupController : Controller
         return Redirect("/groups");
     }
     
+    // TODO: Fix teacher not having access to student groups
     [HttpGet("/group/{id}")]
     [Authorize(Roles = "Teacher, Student")]
     public async Task<IActionResult> Details(Guid id)
