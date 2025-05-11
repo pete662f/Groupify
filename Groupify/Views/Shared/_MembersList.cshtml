@@ -1,0 +1,19 @@
+﻿@model Groupify.ViewModels.Room.CompositeRoomViewModel
+
+
+<h3 class="text-center">Users</h3>
+<ul>
+    @foreach (var user in Model.RoomDetails.Room.Users)
+    {
+        <li>
+            @user.FirstName @user.LastName (@user.UserName) |
+            @if (User.IsInRole("Teacher"))
+            {
+                <button class="btn btn-link btn-sm text-danger p-0 small text-decoration-none"
+                        onclick="removeUser('@Model.RoomDetails.Room.Id', '@user.Id', this)">
+                    Remove
+                </button>
+            }
+        </li>
+    }
+</ul>
