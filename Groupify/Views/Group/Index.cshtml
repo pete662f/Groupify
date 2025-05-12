@@ -1,8 +1,30 @@
-﻿@{
+﻿@model Groupify.ViewModels.Group.GroupsViewModel
+
+@{
     ViewData["Title"] = "Groups";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Groups</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2>Groups</h2>
+    <ul>
+        @foreach (var group in Model.Groups.OrderBy(g => g.GroupNumber))
+        {
+            <li>
+                <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
+                    Group @group.GroupNumber 
+                </a>
+                in room:
+                <a asp-controller="Room" asp-action="Details" asp-route-id="@group.Room.Id">
+                    @group.Room.Name
+                </a>
+                
+            </li>
+            <ul>
+                @foreach (var user in group.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName))
+                {
+                    <li>@user.FirstName @user.LastName</li>
+                }
+            </ul>
+        }
+    </ul>
 </div>

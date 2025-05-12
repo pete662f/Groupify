@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Groupify.Data;
+using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Groupify.ViewModels.Group;
 using Groupify.ViewModels.Room;
@@ -26,9 +27,20 @@ public class GroupController : Controller
     
     [HttpGet("/groups")]
     [Authorize(Roles = "Teacher, Student")]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized(); // User not authenticated
+        
+        IEnumerable<Group> groups = await _groupService.GetGroupsByUserIdAsync(user.Id);
+        
+        GroupsViewModel groupsViewModel = new GroupsViewModel
+        {
+            Groups = groups
+        };
+        
+        return View(groupsViewModel);
     }
     
     [HttpGet("/group")]
