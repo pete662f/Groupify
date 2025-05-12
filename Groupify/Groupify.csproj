@@ -33,4 +33,10 @@
       <Folder Include="wwwroot\lib\bootstrap-icons\" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="Data\DummyProfiles.xlsx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
 </Project>
