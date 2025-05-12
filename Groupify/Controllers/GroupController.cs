@@ -26,7 +26,7 @@ public class GroupController : Controller
     }
     
     [HttpGet("/groups")]
-    [Authorize(Roles = "Teacher, Student")]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
