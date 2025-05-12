@@ -9,15 +9,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="37d6dcb0-b6c9-4fa8-bdad-766d7330357d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Groupify/Models/AdminModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Groupify/Models/ApplicationUser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Groupify/Models/InsightModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Groupify/Models/RoomModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Groupify/Models/StudentModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Groupify/Models/TeacherModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Groupify/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Groupify/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Groupify/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Groupify/Data/ApplicationDbContext.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,11 +20,59 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Algorithms" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;pete662f&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/pete662f/Groupify.git&quot;,
+    &quot;accountId&quot;: &quot;72261bb3-264c-4ad1-b5e4-b874f9e2e982&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;pete662f&quot;,
+    &quot;repository&quot;: &quot;Groupify&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1622b8f95d27187bc1fb39bac49bd64e928773df4fda6fcf6271680be54a2/UserManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/dcd3f98fa5c922ac122cc12473315ff8a0a2fa54baed350c3d68b5c1d5eda/Vector4.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Controllers/GroupController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Controllers/RoomController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Data/GroupService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Data/RoomService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Data/SeedData.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Groupify/ViewModels/Room/CreateRoomViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Views/Group/Details.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Groupify/Views/Room/Create.cshtml" root0="SKIP_HIGHLIGHTING" root1="SKIP_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Views/Room/DetailsStudent.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Views/Room/DetailsTeacher.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Views/Shared/_GroupsList.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/peter/RiderProjects/Groupify/Groupify/Views/Shared/_MembersList.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -57,7 +97,13 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;
+    ]
   }
 }</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Groupify: http">
@@ -101,6 +147,18 @@
       <option name="presentableId" value="Default" />
       <updated>1745237760253</updated>
       <workItem from="1745237760884" duration="5864000" />
+      <workItem from="1745267044946" duration="91000" />
+      <workItem from="1745916180443" duration="38000" />
+      <workItem from="1745916243549" duration="19809000" />
+      <workItem from="1746002050050" duration="15131000" />
+      <workItem from="1746695873536" duration="31136000" />
+      <workItem from="1746782259124" duration="11206000" />
+      <workItem from="1746970439336" duration="330000" />
+      <workItem from="1746971614644" duration="11311000" />
+      <workItem from="1746989632485" duration="1006000" />
+      <workItem from="1746990657775" duration="862000" />
+      <workItem from="1746991562536" duration="1517000" />
+      <workItem from="1746993099401" duration="6149000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize ASP.NET Core MVC with Auth">
       <option name="closed" value="true" />
@@ -110,7 +168,375 @@
       <option name="project" value="LOCAL" />
       <updated>1745237866119</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Refactor user and room management: update relationships, remove profile classes, and implement room service">
+      <option name="closed" value="true" />
+      <created>1745928549814</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745928549814</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add GroupService for group creation and integrate with RoomController">
+      <option name="closed" value="true" />
+      <created>1745930881096</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1745930881096</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Implement many-to-many relationship between users and groups, update GroupService for group retrieval by user and room">
+      <option name="closed" value="true" />
+      <created>1745931293409</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1745931293409</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add methods for group and user management in GroupService: add/remove users to/from groups, and remove groups">
+      <option name="closed" value="true" />
+      <created>1745931855195</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1745931855195</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add method to remove all groups by room ID and clear users from groups">
+      <option name="closed" value="true" />
+      <created>1745932864709</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1745932864709</updated>
+    </task>
+    <task id="LOCAL-00007" summary="RoomController: add TODO for potential relocation or method update">
+      <option name="closed" value="true" />
+      <created>1746003069952</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1746003069952</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Cleaned up: Removed unused code">
+      <option name="closed" value="true" />
+      <created>1746003759243</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746003759243</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Added Greedy Grouping with Swap Optimization">
+      <option name="closed" value="true" />
+      <created>1746020313267</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1746020313267</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Refactor GroupService: streamline variable names and improve readability">
+      <option name="closed" value="true" />
+      <created>1746021140124</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1746021140124</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Refactor Group and Room models to use Guid for IDs">
+      <option name="closed" value="true" />
+      <created>1746709176063</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1746709176063</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add Room listing view and update RoomController for role-based room retrieval">
+      <option name="closed" value="true" />
+      <created>1746710511826</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746710511826</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add room creation functionality and restrict access to teachers">
+      <option name="closed" value="true" />
+      <created>1746711515785</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1746711515785</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add view models for room creation and details, and update RoomController for improved room management">
+      <option name="closed" value="true" />
+      <created>1746731055368</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1746731055368</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Add CompositeRoomViewModel and update views for group creation functionality">
+      <option name="closed" value="true" />
+      <created>1746741469992</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1746741469992</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Update layout in DetailsTeacher view for better group and user display">
+      <option name="closed" value="true" />
+      <created>1746787829943</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1746787829943</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Add group details view and functionality for user management">
+      <option name="closed" value="true" />
+      <created>1746790599850</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1746790599850</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Implement AJAX-based group creation in DetailsTeacher view and enhance RoomController for better error handling">
+      <option name="closed" value="true" />
+      <created>1746792297511</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1746792297511</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Refactor navigation properties in ApplicationUser, Group, and Room models to remove virtual keyword for improved performance">
+      <option name="closed" value="true" />
+      <created>1746792306908</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1746792306908</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Remove unused user management methods from Room model for cleaner code">
+      <option name="closed" value="true" />
+      <created>1746792343503</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1746792343503</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Add GroupNumber property to Group model and improve validation messages in Insight model">
+      <option name="closed" value="true" />
+      <created>1746792650405</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1746792650405</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Add GroupNumber display in group details and update group creation logic">
+      <option name="closed" value="true" />
+      <created>1746793334507</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1746793334507</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Add GroupInsight calculation and update Details view for improved group insights display">
+      <option name="closed" value="true" />
+      <created>1746794498313</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1746794498313</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Update login partial to display user initials in a dropdown menu for improved user experience">
+      <option name="closed" value="true" />
+      <created>1746794942993</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1746794942993</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Add Bootstrap Icons and enhance room name editing functionality">
+      <option name="closed" value="true" />
+      <created>1746798023149</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1746798023149</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Fixed InsightService not added as service">
+      <option name="closed" value="true" />
+      <created>1746972239705</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1746972239705</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Refactor group insight calculations to use Vector4 to fix index error">
+      <option name="closed" value="true" />
+      <created>1746977945630</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1746977945630</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Refactor group creation logic and update group display in Details view">
+      <option name="closed" value="true" />
+      <created>1746979211878</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1746979211878</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Added lastname">
+      <option name="closed" value="true" />
+      <created>1746979342719</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1746979342719</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Updated for student view">
+      <option name="closed" value="true" />
+      <created>1746979372558</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1746979372558</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Add partial views for Groups and Members lists in Details views">
+      <option name="closed" value="true" />
+      <created>1746980262829</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1746980262829</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Enhance group details view by adding last names and updating average insights labels">
+      <option name="closed" value="true" />
+      <created>1746981148271</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1746981148271</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Add user authorization check in group details view">
+      <option name="closed" value="true" />
+      <created>1746986410016</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1746986410016</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Add display for best single match in student details view">
+      <option name="closed" value="true" />
+      <created>1746987027740</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1746987027740</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Change heading for best single match display to improve visual hierarchy">
+      <option name="closed" value="true" />
+      <created>1746990448955</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1746990448955</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Add method to retrieve insight by user ID with error handling">
+      <option name="closed" value="true" />
+      <created>1746990472823</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1746990472823</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Add TODOs for teacher access to student groups and user removal from room">
+      <option name="closed" value="true" />
+      <created>1746991024564</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1746991024564</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Add ExcelDataReader package and implement insight profile creation from xlsx file">
+      <option name="closed" value="true" />
+      <created>1746992052168</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1746992052168</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Fix group size being one to big">
+      <option name="closed" value="true" />
+      <created>1746994091291</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1746994091291</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Remove user from group when removing from room">
+      <option name="closed" value="true" />
+      <created>1746994120405</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1746994120405</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Add delete room functionality with confirmation prompt">
+      <option name="closed" value="true" />
+      <created>1746994156205</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1746994156205</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Refactor layout of student details page for improved readability">
+      <option name="closed" value="true" />
+      <created>1746994163605</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1746994163605</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Increase student creation limit to 60 and improve file access for xlsx reading">
+      <option name="closed" value="true" />
+      <created>1746994174289</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1746994174289</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Add bar chart visualization for average group insights">
+      <option name="closed" value="true" />
+      <created>1746999372553</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1746999372553</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Sort users by first and last name in group and members lists">
+      <option name="closed" value="true" />
+      <created>1746999380354</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1746999380354</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Enhance group access control and streamline group creation process">
+      <option name="closed" value="true" />
+      <created>1746999400941</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1746999400941</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Add unit tests and update database migration setup">
+      <option name="closed" value="true" />
+      <created>1746999411342</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1746999411342</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,9 +544,48 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Initialize ASP.NET Core MVC with Auth" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initialize ASP.NET Core MVC with Auth" />
+    <MESSAGE value="Add GroupInsight calculation and update Details view for improved group insights display" />
+    <MESSAGE value="Update login partial to display user initials in a dropdown menu for improved user experience" />
+    <MESSAGE value="Add Bootstrap Icons and enhance room name editing functionality" />
+    <MESSAGE value="Fixed InsightService not added as service" />
+    <MESSAGE value="Refactor group insight calculations to use Vector4 to fix index error" />
+    <MESSAGE value="Refactor group creation logic and update group display in Details view" />
+    <MESSAGE value="Added lastname" />
+    <MESSAGE value="Updated for student view" />
+    <MESSAGE value="Add partial views for Groups and Members lists in Details views" />
+    <MESSAGE value="Enhance group details view by adding last names and updating average insights labels" />
+    <MESSAGE value="Add user authorization check in group details view" />
+    <MESSAGE value="Add display for best single match in student details view" />
+    <MESSAGE value="Change heading for best single match display to improve visual hierarchy" />
+    <MESSAGE value="Add method to retrieve insight by user ID with error handling" />
+    <MESSAGE value="Add TODOs for teacher access to student groups and user removal from room" />
+    <MESSAGE value="Add ExcelDataReader package and implement insight profile creation from xlsx file" />
+    <MESSAGE value="Fix group size being one to big" />
+    <MESSAGE value="Remove user from group when removing from room" />
+    <MESSAGE value="Add delete room functionality with confirmation prompt" />
+    <MESSAGE value="Refactor layout of student details page for improved readability" />
+    <MESSAGE value="Increase student creation limit to 60 and improve file access for xlsx reading" />
+    <MESSAGE value="Add bar chart visualization for average group insights" />
+    <MESSAGE value="Sort users by first and last name in group and members lists" />
+    <MESSAGE value="Enhance group access control and streamline group creation process" />
+    <MESSAGE value="Add unit tests and update database migration setup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add unit tests and update database migration setup" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
