@@ -24,6 +24,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.WebHost.UseStaticWebAssets();
+
 var app = builder.Build();
 
 // Set up the database
