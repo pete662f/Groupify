@@ -1,0 +1,89 @@
+﻿@model System.Numerics.Vector4
+
+<script>
+        // Read the four components from the Razor model
+        var data = [
+            @Model.X.ToString("F2", System.Globalization.CultureInfo.InvariantCulture),
+            @Model.Y.ToString("F2", System.Globalization.CultureInfo.InvariantCulture),
+            @Model.Z.ToString("F2", System.Globalization.CultureInfo.InvariantCulture),
+            @Model.W.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)
+        ];
+
+
+        // Compute percentages of max=6
+        var percentages = data.map(function(v) {
+            return Math.round((parseFloat(v) / 6) * 100) + '%';
+        });
+        
+        var labels     = ['Blue', 'Green', 'Yellow', 'Red'];
+
+        var ctx = document.getElementById('insightChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        'rgb(0, 105, 153)',
+                        'rgb(51, 102, 51)',
+                        'rgb(255, 204, 51)',
+                        'rgb(204, 51, 51)'
+                    ],
+                    borderColor: [
+                        'black',
+                        'black',
+                        'black',
+                        'black'
+                    ],
+                    borderWidth: 2,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 6,
+                        ticks: { stepSize: 3 },
+                        grid: {
+                            color: ctx => ctx.tick.value === 3 ? 'black' : 'transparent',
+                            lineWidth: ctx => ctx.tick.value === 3 ? 3 : 0,
+                            z: 1
+                        }
+                    },
+                    x: {
+                        barPercentage: 1.0,
+                        categoryPercentage: 1.0,
+                        grid: {
+                            color: 'black',
+                            lineWidth: 3,
+                        },
+                        
+                        // multiline x‐axis labels: name on top, then value & percent beneath
+                        ticks: {
+                            callback: function(val, index) {
+                                // return an array -> Chart.js will stack them
+                                let v = data[index].toFixed(2);
+                                let p = percentages[index];
+                                return [ this.getLabelForValue(index), `${v} (${p})` ];
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => {
+                                let v = ctx.parsed.y.toFixed(2);
+                                let p = percentages[ctx.dataIndex];
+                                return ` ${v} (${p})`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
