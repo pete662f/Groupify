@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Groupify.Data;
 using Groupify.Models.Identity;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,10 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    // Static files are served from the wwwroot folder in production
+    app.UseStaticFiles();
+    StaticWebAssetsLoader.UseStaticWebAssets(app.Environment, app.Configuration);
+    
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
