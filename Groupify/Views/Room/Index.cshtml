@@ -7,32 +7,34 @@
     ViewData["Title"] = "Rooms";
 }
 
-@{
-    if (User.IsInRole("Teacher")) {
-        <h2>Owned Rooms</h2>
+<div  class="text-center">
+    @{
+        if (User.IsInRole("Teacher")) {
+            <h2>Owned Rooms</h2>
+        }
+        else if (User.IsInRole("Student")) {
+            <h2>Joined Rooms</h2>
+        }
+        else {
+            <h2>No Rooms</h2>
+        }
     }
-    else if (User.IsInRole("Student")) {
-        <h2>Joined Rooms</h2>
-    }
-    else {
-        <h2>No Rooms</h2>
-    }
-}
 
 
-@foreach (var room in Model)
-{
-    <div><a
-        asp-action="Details"
-        asp-route-roomId="@room.Id">
-        @room.Name
-    </a></div>
-}
-
-@{
-    if (User.IsInRole("Teacher")) {
-        // Create a new room button
-        <a class="btn btn-primary" asp-action="Create" asp-controller="Room">Create New Room</a>
-        
+    @foreach (var room in Model)
+    {
+        <div><a
+            asp-action="Details"
+            asp-route-roomId="@room.Id">
+            @room.Name
+        </a></div>
     }
-}
+
+    @{
+        if (User.IsInRole("Teacher")) {
+            // Create a new room button
+            <a class="btn btn-primary" asp-action="Create" asp-controller="Room">Create New Room</a>
+            
+        }
+    }
+</div>
