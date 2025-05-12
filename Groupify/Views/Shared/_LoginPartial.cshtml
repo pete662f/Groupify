@@ -11,7 +11,7 @@
             $"{currentUser.FirstName[0]}{currentUser.LastName[0]}" : "?";
 
         <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="userDropdown" role="button"
+            <a class="nav-link p-0" href="#" id="userDropdown" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
                      style="width: 35px; height: 35px;">
@@ -20,7 +20,10 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
+                @if (User.IsInRole("Student"))
+                {
+                    <li><a class="dropdown-item" asp-controller="Insight" asp-action="Profile">Profile</a></li>
+                }
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form asp-area="Identity" asp-page="/Account/Logout"
