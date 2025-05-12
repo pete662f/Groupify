@@ -1,15 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
-using Groupify.Models.Identity;
-namespace Groupify.Models.Domain;
 
-public class Insight
+namespace Groupify.ViewModels.Insight;
+
+public class CreateInsightProfileViewModel
 {
-    [Key, ForeignKey(nameof(ApplicationUser))]
-    public string ApplicationUserId { get; set; } = null!;
-
-    // Insight color energies 0 to 6
     [Required]
     [Range(0, 6, ErrorMessage="Energy must be between 0 and 6")]
     public float Red { get; set; }
@@ -27,8 +21,4 @@ public class Insight
     [Required]
     [Range(0, Int32.MaxValue, ErrorMessage="Wheel position must be a positive integer")]
     public int WheelPosition { get; set; }
- 
-    public Vector4 ToVector4() => new Vector4(Red, Green, Blue, Yellow );
-
-    public ApplicationUser ApplicationUser { get; set; } = null!;
 }

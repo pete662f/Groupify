@@ -1,0 +1,29 @@
+﻿@model Groupify.Models.Domain.Insight
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1 class="text-center">Your Insight</h1>
+<div class="row text-center">
+    <div class="col-md-6">
+        <h3 class="text-center">Insights Discovery® wheel</h3>
+        <p>Wheel position: @Model.WheelPosition</p>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center">Persona</h3>
+        <div class="mx-5">
+            <canvas id="insightChart" width="400" height="400"></canvas>
+        </div>
+        <div class="text-center mt-4">
+            <a asp-action="UpdateProfile" class="btn btn-primary px-4 py-2 rounded-3">Update Profile</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <partial name="_Chart" model="Model.ToVector4()"/>
+}

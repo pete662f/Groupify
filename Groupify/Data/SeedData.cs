@@ -69,7 +69,6 @@ public class SeedData
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(student, "Student");
-                    await insightService.CreateInsightProfileAsync(student.Id);
                     
                     // Create a new insight profile for the student from xlsx file
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "DummyProfiles.xlsx");
@@ -112,7 +111,7 @@ public class SeedData
                     }
                     
                     // Update insight profile
-                    await insightService.UpdateInsightAsync(student.Id, insight);
+                    await insightService.CreateInsightProfileAsync(student.Id, insight);
                     
                     // Add student to room
                     if (roomId != Guid.Empty)

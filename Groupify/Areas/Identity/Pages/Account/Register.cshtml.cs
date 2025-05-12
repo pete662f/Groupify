@@ -148,9 +148,6 @@ namespace Groupify.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, Input.Role);
-
-                    if (await _userManager.IsInRoleAsync(user, "Student"))
-                        await _insightService.CreateInsightProfileAsync(user.Id);
                     
                     _logger.LogInformation("User created a new account with password.");
 

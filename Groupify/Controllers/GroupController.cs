@@ -88,6 +88,7 @@ public class GroupController : Controller
 
         if (!ModelState.IsValid)
         {
+            // Return the first error message
             var error = ModelState.Values
                 .SelectMany(v => v?.Errors ?? [])
                 .FirstOrDefault()?.ErrorMessage ?? "Invalid input";

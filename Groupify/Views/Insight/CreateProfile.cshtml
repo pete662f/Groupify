@@ -1,0 +1,46 @@
+﻿@model Groupify.ViewModels.Insight.CreateInsightProfileViewModel
+
+@{
+    ViewData["Title"] = "Create Profile";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Create Your Insight Profile</h2>
+    @{ ViewBag.FormAction = "CreateProfile"; }
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="CreateProfile" method="post" class="card shadow-sm">
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label asp-for="Blue" class="form-label fw-bold"></label>
+                        <input asp-for="Blue" class="form-control rounded-3" />
+                        <span asp-validation-for="Blue" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Green" class="form-label fw-bold"></label>
+                        <input asp-for="Green" class="form-control rounded-3" />
+                        <span asp-validation-for="Green" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Yellow" class="form-label fw-bold"></label>
+                        <input asp-for="Yellow" class="form-control rounded-3" />
+                        <span asp-validation-for="Yellow" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Red" class="form-label fw-bold"></label>
+                        <input asp-for="Red" class="form-control rounded-3" />
+                        <span asp-validation-for="Red" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label asp-for="WheelPosition" class="form-label fw-bold"></label>
+                        <input asp-for="WheelPosition" min="0" class="form-control rounded-3" />
+                        <span asp-validation-for="WheelPosition" class="text-danger"></span>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">Create Profile</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

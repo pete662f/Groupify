@@ -20,7 +20,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" asp-controller="Insight" asp-action="Profile">Profile</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form asp-area="Identity" asp-page="/Account/Logout"
