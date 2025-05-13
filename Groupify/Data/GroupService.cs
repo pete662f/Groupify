@@ -191,7 +191,7 @@ public class GroupService
         groups = GreedyGrouping(users, groups, globalAverage, groupSize);
         
         // Swap users to balance groups
-        groups = SwapOptimization(groups, globalAverage, iterations:100);
+        groups = SwapOptimization(groups, globalAverage, iterations:users.Count*10);
         
         // Create group entities
         int groupIndex = 0;
