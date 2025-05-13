@@ -4,6 +4,11 @@
     ViewData["Title"] = "Create Profile";
 }
 
+@if (TempData["WarningMessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["WarningMessage"]</div>
+}
+
 <div class="container py-5">
     <h2 class="text-center mb-4">Create Your Insight Profile</h2>
     @{ ViewBag.FormAction = "CreateProfile"; }

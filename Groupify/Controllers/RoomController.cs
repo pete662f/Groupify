@@ -98,7 +98,10 @@ public class RoomController : Controller
             return Unauthorized(); // User not authenticated
         
         if (user.Insight == null)
-            return BadRequest("You need to create an insight before joining a room.");
+        {
+            TempData["WarningMessage"] = "Please complete your insight profile before joining a room.";
+            return RedirectToAction("CreateProfile", "Insight");
+        }
         
         try
         {
