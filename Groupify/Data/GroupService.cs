@@ -324,4 +324,30 @@ public class GroupService
         group.Users.Remove(user);
         await _context.SaveChangesAsync();
     }
+
+    public async Task MoveUserToGroupAsync(string userId, Guid newGroupId)
+    {
+        // Load the user + their existing groups
+        var user = await _context.Users
+            .Include(u => u.Groups)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+            throw new InvalidOperationException($"User not found.");
+
+        // Load the target group
+        var newGroup = await _context.Groups
+            .FirstOrDefaultAsync(g => g.Id == newGroupId);
+        if (newGroup == null)
+            throw new InvalidOperationException($"Group not found.");
+        
+        // Find any old group in the same Room
+        var oldGroup = user.Groups
+            .FirstOrDefault(g => g.RoomId == newGroup.RoomId);
+        if (oldGroup != null)
+            user.Groups.Remove(oldGroup);
+
+        user.Groups.Add(newGroup);
+
+        await _context.SaveChangesAsync();
+    }
 }
