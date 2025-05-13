@@ -13,12 +13,14 @@ public class RoomController : Controller
 {
     private readonly RoomService _roomService;
     private readonly GroupService _groupService;
+    private readonly InsightService _insightService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public RoomController(RoomService roomService, GroupService groupService, UserManager<ApplicationUser> userManager)
+    public RoomController(RoomService roomService, GroupService groupService, InsightService insightService, UserManager<ApplicationUser> userManager)
     {
         _roomService = roomService;
         _groupService = groupService;
+        _insightService = insightService;
         _userManager = userManager;
     }
     
@@ -97,8 +99,11 @@ public class RoomController : Controller
         if (user == null)
             return Unauthorized(); // User not authenticated
         
-        if (user.Insight == null)
-            return BadRequest("You need to create an insight before joining a room.");
+        if (!await _insightService.HasInsightProfileAsync(user.Id))
+        {
+            TempData["WarningMessage"] = "Please complete your insight profile before joining a room.";
+            return RedirectToAction("CreateProfile", "Insight");
+        }
         
         try
         {

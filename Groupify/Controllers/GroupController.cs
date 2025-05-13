@@ -81,6 +81,37 @@ public class GroupController : Controller
         
         return View(vm);
     }
+
+    [HttpPost("/group/moveUser")]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> MoveUserToGroup(Guid newGroupId, string userId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Json(new { success = false, message = "Unauthorized" });
+        
+        var group = await _groupService.GetGroupByIdAsync(newGroupId);
+        if (group == null)
+            return Json(new { success = false, message = "Group not found" });
+
+        var room = await _roomService.GetRoomByIdAsync(group.RoomId);
+        if (room == null)
+            return Json(new { success = false, message = "Room not found" });
+
+        bool isOwner = room.OwnerId == user.Id;
+        if (!isOwner)
+            return Json(new { success = false, message = "Forbidden" });
+
+        try
+        { 
+            await _groupService.MoveUserToGroupAsync(userId, newGroupId);
+            return Json(new { success = true });
+        }
+        catch (Exception e)
+        {
+            return Json(new { success = false, message = e.Message });
+        }
+    }
     
     [HttpPost("/group/create")]
     [Authorize(Roles = "Teacher")]

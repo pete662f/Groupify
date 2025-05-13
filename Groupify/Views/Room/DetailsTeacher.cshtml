@@ -1,5 +1,4 @@
-﻿@using Groupify.ViewModels.Group
-@model Groupify.ViewModels.Room.CompositeRoomViewModel
+﻿@model Groupify.ViewModels.Room.CompositeRoomViewModel
 
 @{
     ViewData["Title"] = "Room Details";
@@ -205,7 +204,47 @@
                 alert('Error deleting room');
             });
         }
-    
-    
+        
+        
+        // Drag and drop functionality
+        let draggedUserId = null;
+
+            function onUserDragStart(e) {
+            draggedUserId = e.target.getAttribute('data-user-id');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', draggedUserId);
+        }
+
+        function onUserDrop(e) {
+            e.preventDefault();
+            const newGroupId = e.dataTransfer.getData('text/plain');
+            const targetBox = e.currentTarget;
+            const groupId = targetBox.getAttribute('data-group-id');
+            const li = document.querySelector(`li[data-user-id='${draggedUserId}']`);
+            const ul = targetBox.querySelector('ul.group-list');
+            ul.appendChild(li);
+
+            // Persist change
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                fetch('/Group/MoveUser', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: new URLSearchParams({ userId: draggedUserId, newGroupId: groupId })
+        })
+            .then(r => r.json())
+            .then(data => {
+            if (!data.success) {
+                alert(data.message || 'Could not move user');
+                location.reload();
+            }
+        })
+            .catch(() => {
+                alert('Error communicating with server');
+                location.reload();
+            });
+        }
     </script>
 }

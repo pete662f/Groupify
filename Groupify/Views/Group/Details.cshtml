@@ -10,7 +10,7 @@
 <div class="row text-center">
     <h2>
         Group @Model.Group.GroupNumber in room:
-        <a asp-action="Details" asp-route-roomId="@Model.Group.RoomId">
+        <a asp-controller="Room" asp-action="Details" asp-route-roomId="@Model.Group.RoomId">
             @Model.Group.Room.Name
         </a>
     </h2>

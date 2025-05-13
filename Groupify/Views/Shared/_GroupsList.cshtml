@@ -1,19 +1,74 @@
 ﻿@model Groupify.ViewModels.Room.CompositeRoomViewModel
 
+<style>
+    .group-box {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: .5rem;
+        box-shadow: 0 .25rem .5rem rgba(0,0,0,0.1);
+        padding: 1rem;
+        transition: box-shadow .3s ease, border-color .3s ease;
+    }
+    .group-box.drag-over {
+        box-shadow: 0 .5rem 1rem rgba(33,150,243,0.4) !important;
+        border-color: #2196f3 !important;
+    }
+    .group-box h4 {
+        margin-bottom: .75rem;
+        font-size: 1.25rem;
+        color: #333;
+        text-align: center;
+    }
+    .group-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        min-height: 100px;
+    }
+    .group-list li {
+        background: #f8f9fa;
+        margin-bottom: .5rem;
+        padding: .5rem .75rem;
+        border-radius: .25rem;
+        @User.IsInRole("Teacher") {
+            cursor: grab;
+        }
+        transition: background .2s ease;
+        min-width: 10rem;
+    }
+    .group-list li:active {
+        @User.IsInRole("Teacher") {
+            cursor: grabbing;
+        }
+        background: #e2e6ea;
+    }
+</style>
+
 <h3 class="text-center">Groups</h3>
-<ul>
+<div class="row">
     @foreach (var group in Model.RoomDetails.Groups.OrderBy(g => g.GroupNumber))
     {
-        <li>
-            <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
-                Group @group.GroupNumber
-            </a>
-        </li>
-        <ul>
-            @foreach (var user in group.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName))
-            {
-                <li>@user.FirstName @user.LastName</li>
-            }
-        </ul>
+        <div class="group-box col m-2" data-group-id="@group.Id"
+             ondragover="event.preventDefault(); this.classList.add('drag-over');"
+             ondragleave="this.classList.remove('drag-over');"
+             ondrop="onUserDrop(event); this.classList.remove('drag-over');">
+            <h4>
+                <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id" class="text-decoration-none text-body">
+                    Group @group.GroupNumber
+                    <i class="bi bi-box-arrow-in-right ms-2"></i>
+                </a>
+            </h4>
+
+            <ul id="group-@group.Id" class="group-list">
+                @foreach (var user in group.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName))
+                {
+                    <li 
+                        @(User.IsInRole("Teacher") ? "draggable=true ondragstart=onUserDragStart(event)" : "")
+                        data-user-id="@user.Id">
+                        <i class="bi bi-person-fill me-2"></i>@user.FirstName @user.LastName
+                    </li>
+                }
+            </ul>
+        </div>
     }
-</ul>
+</div>
