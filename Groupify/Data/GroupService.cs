@@ -352,4 +352,21 @@ public class GroupService
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Guid> GetGroupByUserIdAndRoomIdAsync(string userId, Guid roomId)
+    {
+        var user = await _context.Users
+            .Include(u => u.Groups)
+            .ThenInclude(g => g.Room)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null) 
+            throw new InvalidOperationException("User not found.");
+        
+        var group = user.Groups
+            .FirstOrDefault(g => g.RoomId == roomId);
+        if (group == null) 
+            return Guid.Empty;
+        
+        return group.Id;
+    }
 }

@@ -13,5 +13,7 @@ namespace Groupify.ViewModels.Room
         public CreateGroupViewModel CreateGroup { get; set; } = new CreateGroupViewModel();
         
         public IEnumerable<UserMatchDto> SingleMatchs { get; set; } = new List<UserMatchDto>();
+        
+        public Guid UserGroupId { get; set; } = Guid.Empty;
     }
 }

@@ -83,10 +83,11 @@ public class RoomController : Controller
         // Create the view model
         CompositeRoomViewModel vm = new CompositeRoomViewModel
         {
+            UserGroupId = await _groupService.GetGroupByUserIdAndRoomIdAsync(user.Id, roomId),
             RoomDetails = new DetailsRoomViewModel
             {
                 Room = room,
-                InviteLink = Url.Action("JoinRoom", "Room", new { roomId }, Request.Scheme),
+                InviteLink = Url.Action("JoinRoom", "Room", new { roomId }, Request.Scheme)!,
                 Groups = room.Groups,
             },
         };
