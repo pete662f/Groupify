@@ -1,4 +1,6 @@
-﻿using Groupify.Models.Domain;
+﻿using System.Numerics;
+using Groupify.Models.Domain;
+using Groupify.Models.DTO;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +18,53 @@ public class RoomService
         _userManager = userManager;
     }
     
-    public async Task<Room> GetRoomByIdAsync(Guid roomId)
+    public async Task<IEnumerable<UserMatchDto>> GetSingleMatchsAsync(Guid roomId, string userId, int maxCount = 10)
+    {
+        var user = await _context.Users.Include(u => u.Insight)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+            throw new InvalidOperationException("User not found");
+        
+        var room = await _context.Rooms
+            .Include(r => r.Users)
+            .ThenInclude(u => u.Insight)
+            .FirstOrDefaultAsync(r => r.Id == roomId);
+        if (room == null) 
+            throw new InvalidOperationException("Room not found");
+        
+        var userInsight = user.Insight;
+        if (userInsight == null)
+            throw new InvalidOperationException("User insight not found");
+        
+        var bestMatches = room.Users
+            .Where(u => u.Id != userId && u.Insight != null)
+            .Select(u => new UserMatchDto
+            {
+                User = u,
+                MatchPercentage = GetMatchPercentage(userInsight.ToVector4(), u.Insight!.ToVector4())
+            })
+            .OrderByDescending(x => x.MatchPercentage)
+            .Take(maxCount)
+            .ToList();
+        
+        return bestMatches;
+    }
+
+    private float GetMatchPercentage(Vector4 userInsight, Vector4 otherUserInsight)
+    {
+        // The “ideal” vector we want otherUserInsight to match
+        Vector4 ideal = Vector4.Subtract(new Vector4(6,6,6,6), userInsight);
+
+        // How far otherUserInsight is from that ideal
+        float distance = Vector4.Distance(ideal, otherUserInsight);
+
+        // Normalize by ideal’s length and invert to get a % score
+        float matchProcent = 100.0f / (1.0f + distance / ideal.Length());
+        
+        return matchProcent;
+    }
+    
+    public async Task<Room> GetRoomByIdAsync(Guid roomId) 
     {
         var room = await _context.Rooms
             .Include(r => r.Users)   

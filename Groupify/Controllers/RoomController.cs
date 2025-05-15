@@ -81,13 +81,14 @@ public class RoomController : Controller
             RoomDetails = new DetailsRoomViewModel
             {
                 Room = room,
-                Groups = room.Groups
-            }
+                Groups = room.Groups,
+            },
         };
         
         if (isOwner)
             return View("DetailsTeacher", vm);
         
+        vm.SingleMatchs = await _roomService.GetSingleMatchsAsync(roomId, user.Id);
         return View("DetailsStudent", vm);
     }
     

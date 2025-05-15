@@ -28,7 +28,7 @@ public class Insight
     [Range(0, Int32.MaxValue, ErrorMessage="Wheel position must be a positive integer")]
     public int WheelPosition { get; set; }
  
-    public Vector4 ToVector4() => new Vector4(Red, Green, Blue, Yellow );
+    public Vector4 ToVector4() => new Vector4(Blue, Green, Yellow, Red );
 
     public ApplicationUser ApplicationUser { get; set; } = null!;
 }

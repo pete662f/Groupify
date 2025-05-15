@@ -30,16 +30,12 @@
         margin-bottom: .5rem;
         padding: .5rem .75rem;
         border-radius: .25rem;
-        @User.IsInRole("Teacher") {
-            cursor: grab;
-        }
+        @(User.IsInRole("Teacher") ? "cursor: grab;" : "");
         transition: background .2s ease;
         min-width: 10rem;
     }
     .group-list li:active {
-        @User.IsInRole("Teacher") {
-            cursor: grabbing;
-        }
+        @(User.IsInRole("Teacher") ? "cursor: grabbing;" : "");
         background: #e2e6ea;
     }
 </style>

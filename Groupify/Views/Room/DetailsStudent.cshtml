@@ -1,4 +1,6 @@
-﻿@using Groupify.Models.Identity
+﻿@using Groupify.Models.DTO
+@using Groupify.Models.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Groupify.ViewModels.Room.CompositeRoomViewModel
 
 @{
@@ -34,9 +36,9 @@
     <div class="col-md-4">
         <h3 class="text-center">Best single match</h3>
         <ol>
-            @foreach (ApplicationUser match in Model.SingleMatchs)
+            @foreach (UserMatchDto match in Model.SingleMatchs)
             {
-                <li>@match.FirstName @match.LastName</li>
+                <li>@match.User.FirstName @match.User.LastName - @match.MatchPercentage.ToString("N0")%</li>
             }
         </ol>
     </div>
