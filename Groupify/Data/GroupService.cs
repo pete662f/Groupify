@@ -15,6 +15,8 @@ public class GroupService
         _context = context;
     }
     
+    // TODO: Add checks for user roles in nearly all methods to ensure that only the right users can access the methods (Even tho there are checks in the controller)
+    
     // This method are used to calculate the average Insight energies of a list of users
     private Vector4 CalculateAverageInsightVector4(List<ApplicationUser> users)
     {
@@ -191,7 +193,7 @@ public class GroupService
         groups = GreedyGrouping(users, groups, globalAverage, groupSize);
         
         // Swap users to balance groups
-        groups = SwapOptimization(groups, globalAverage, iterations:100);
+        groups = SwapOptimization(groups, globalAverage, iterations:users.Count*10);
         
         // Create group entities
         int groupIndex = 0;

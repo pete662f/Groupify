@@ -15,6 +15,8 @@ public class InsightService
         _context = context;
         _userManager = userManager;
     }
+    
+    // TODO: Add checks for user roles in nearly all methods to ensure that only the right users can access the methods (Even tho there are checks in the controller)
 
     public async Task CreateInsightProfileAsync(string userId, Insight insight)
     {

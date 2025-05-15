@@ -66,9 +66,10 @@ public class GroupController : Controller
             return NotFound();
         
         // Check if the user is part of the room
-        var isUserInRoom = room.Users.Any(u => u.Id == user.Id);
-        var isUserOwner = room.OwnerId == user.Id;
-        if (!isUserInRoom && !isUserOwner)
+        bool isInRoom = room.Users.Any(u => u.Id == user.Id);
+        bool isOwner = room.OwnerId == user.Id;
+        bool isAdmin = User.IsInRole("Admin");
+        if (!isInRoom && !isOwner && !isAdmin)
             return Forbid();
         
         var vm = new DetailsGroupViewModel
@@ -99,7 +100,8 @@ public class GroupController : Controller
             return Json(new { success = false, message = "Room not found" });
 
         bool isOwner = room.OwnerId == user.Id;
-        if (!isOwner)
+        bool isAdmin = User.IsInRole("Admin");
+        if (!isOwner && !isAdmin)
             return Json(new { success = false, message = "Forbidden" });
 
         try
@@ -126,7 +128,8 @@ public class GroupController : Controller
             return Json(new { success = false, message = "Room not found" });
 
         bool isOwner = room.OwnerId == user.Id;
-        if (!isOwner)
+        bool isAdmin = User.IsInRole("Admin");
+        if (!isOwner && !isAdmin)
             return Json(new { success = false, message = "Forbidden" });
 
         if (!ModelState.IsValid)

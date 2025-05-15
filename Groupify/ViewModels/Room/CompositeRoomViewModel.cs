@@ -1,4 +1,5 @@
-﻿using Groupify.Models.Identity;
+﻿using Groupify.Models.DTO;
+using Groupify.Models.Identity;
 using Groupify.ViewModels.Group;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
@@ -11,6 +12,6 @@ namespace Groupify.ViewModels.Room
 
         public CreateGroupViewModel CreateGroup { get; set; } = new CreateGroupViewModel();
         
-        public IEnumerable<ApplicationUser> SingleMatchs { get; set; } = new List<ApplicationUser>();
+        public IEnumerable<UserMatchDto> SingleMatchs { get; set; } = new List<UserMatchDto>();
     }
 }

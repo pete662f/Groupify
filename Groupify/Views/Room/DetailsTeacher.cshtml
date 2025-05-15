@@ -25,7 +25,9 @@
             <input type="text" id="roomNameInput" class="h2-input d-none form-control-plaintext"
                    value="@Model.RoomDetails.Room.Name"
                    onblur="updateRoomName()"
-                   onkeydown="if(event.key === 'Enter') this.blur();" />
+                   onkeydown="if(event.key === 'Enter') this.blur();"
+                   oninput="this.style.width = this.scrollWidth + 'px';"
+                   onfocus="this.style.width = this.scrollWidth + 'px';"/>
             <button class="btn btn-link p-0 ms-2" onclick="toggleRoomNameEdit()">
                 <i class="bi bi-pencil-fill text-dark"></i>
             </button>
@@ -194,7 +196,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = '/Room/Index';
+                    window.location.href = '/rooms/';
                 } else {
                     alert(data.message || 'Failed to delete room');
                 }
