@@ -196,7 +196,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = '/Room/Index';
+                    window.location.href = '/rooms/';
                 } else {
                     alert(data.message || 'Failed to delete room');
                 }

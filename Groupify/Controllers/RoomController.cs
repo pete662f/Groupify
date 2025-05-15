@@ -34,7 +34,11 @@ public class RoomController : Controller
 
         IEnumerable<Room> rooms;
         
-        if (await _userManager.IsInRoleAsync(user, "Teacher"))
+        if (await _userManager.IsInRoleAsync(user, "Admin"))
+        {
+            rooms = await _roomService.GetAllRoomsAsync();
+        }
+        else if (await _userManager.IsInRoleAsync(user, "Teacher"))
         {
             rooms = await _roomService.GetOwnedRoomsByUserIdAsync(user.Id);
         }
@@ -72,7 +76,8 @@ public class RoomController : Controller
         // Check if the user is the owner or a member of the room
         bool isOwner  = room.OwnerId == user.Id;
         bool isMember = room.Users.Any(u => u.Id == user.Id);
-        if (!isOwner && !isMember)
+        bool isAdmin = User.IsInRole("Admin");
+        if (!isOwner && !isMember && !isAdmin)
             return Forbid();
         
         // Create the view model
@@ -85,7 +90,7 @@ public class RoomController : Controller
             },
         };
         
-        if (isOwner)
+        if (isOwner || isAdmin)
             return View("DetailsTeacher", vm);
         
         vm.SingleMatchs = await _roomService.GetSingleMatchsAsync(roomId, user.Id);
@@ -160,34 +165,6 @@ public class RoomController : Controller
 
     [HttpPost]
     [Authorize(Roles = "Teacher")]
-    public async Task<IActionResult> RemoveRoom(Guid roomId)
-    {
-        var user = await _userManager.GetUserAsync(User);
-        
-        if (user == null)
-            return Unauthorized(); // User not authenticated
-        
-        try
-        {
-            // Check if the user is the owner of the room
-            var room = await _roomService.GetRoomByIdAsync(roomId);
-            
-            if (room.OwnerId != user.Id)
-            {
-                return Forbid(); // Only owner can delete
-            }
-            
-            await _roomService.RemoveRoomAsync(roomId, user.Id);
-            return RedirectToAction("Index"); // Redirect to the index
-        }
-        catch (InvalidOperationException e)
-        {
-            return NotFound(e.Message);
-        }
-    }
-
-    [HttpPost]
-    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> UpdateName(ChangeRoomNameViewModel vm)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -200,7 +177,7 @@ public class RoomController : Controller
             // Check if the user is the owner of the room
             var room = await _roomService.GetRoomByIdAsync(vm.RoomId);
             
-            if (room.OwnerId != user.Id)
+            if (room.OwnerId != user.Id && !User.IsInRole("Admin"))
                 return Json(new {sucess = false, message = "Forbid"});
             
             Console.WriteLine("Name: " + vm.NewName);
@@ -227,7 +204,7 @@ public class RoomController : Controller
             // Check if the user is the owner of the room
             var room = await _roomService.GetRoomByIdAsync(roomId);
             
-            if (room.OwnerId != user.Id)
+            if (room.OwnerId != user.Id && !User.IsInRole("Admin"))
             {
                 return Forbid();
             }
@@ -252,7 +229,7 @@ public class RoomController : Controller
         try
         {
             var room = await _roomService.GetRoomByIdAsync(roomId);
-            if (room.OwnerId != user.Id)
+            if (room.OwnerId != user.Id && !User.IsInRole("Admin"))
                 return Json(new { success = false, message = "Forbidden" });
 
             await _roomService.RemoveUserFromRoomAsync(userId, roomId);
@@ -275,10 +252,10 @@ public class RoomController : Controller
         try
         {
             var room = await _roomService.GetRoomByIdAsync(roomId);
-            if (room.OwnerId != user.Id)
+            if (room.OwnerId != user.Id && !User.IsInRole("Admin"))
                 return Json(new { success = false, message = "Forbidden" });
 
-            await _roomService.RemoveRoomAsync(roomId, user.Id);
+            await _roomService.RemoveRoomAsync(User, roomId, user.Id);
             return Json(new { success = true });
         }
         catch (InvalidOperationException e)

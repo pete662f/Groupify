@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Security.Claims;
 using Groupify.Models.Domain;
 using Groupify.Models.DTO;
 using Groupify.Models.Identity;
@@ -17,6 +18,8 @@ public class RoomService
         _context = context;
         _userManager = userManager;
     }
+    
+    // TODO: Add checks for user roles in nearly all methods to ensure that only the right users can access the methods (Even tho there are checks in the controller)
     
     public async Task<IEnumerable<UserMatchDto>> GetSingleMatchsAsync(Guid roomId, string userId, int maxCount = 10)
     {
@@ -128,7 +131,7 @@ public class RoomService
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
-                throw new InvalidOperationException("User not found");
+            throw new InvalidOperationException("User not found");
         
         var room = await _context.Rooms
             .Include(r => r.Users)
@@ -195,7 +198,7 @@ public class RoomService
         return room.Id;
     }
     
-    public async Task RemoveRoomAsync(Guid roomId, string userId)
+    public async Task RemoveRoomAsync(ClaimsPrincipal caller, Guid roomId, string userId)
     {
         var room = await _context.Rooms
             .Include(r => r.Groups)
@@ -208,7 +211,7 @@ public class RoomService
         if (room == null)
             throw new InvalidOperationException("Room not found");
         
-        if (room.OwnerId != userId)
+        if (room.OwnerId != userId && !caller.IsInRole("Admin"))
             throw new InvalidOperationException("Only the owner can delete the room");
         
         // Remove all users from the groups
@@ -230,5 +233,12 @@ public class RoomService
         _context.Rooms.Remove(room);
         
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Room>> GetAllRoomsAsync()
+    {
+        var rooms = await _context.Rooms.ToListAsync();
+        
+        return rooms;
     }
 }
