@@ -147,7 +147,20 @@ namespace Groupify.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, Input.Role);
+                    if (Input.Role == "Admin")
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                        await _userManager.AddToRoleAsync(user, "Teacher");
+                    } 
+                    else if (Input.Role == "Teacher")
+                    {
+                        await _userManager.AddToRoleAsync(user, "Teacher");
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "Student");
+                    }
+                    
                     
                     _logger.LogInformation("User created a new account with password.");
 
