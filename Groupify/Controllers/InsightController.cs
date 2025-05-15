@@ -40,6 +40,26 @@ public class InsightController : Controller
         return View(insight);
     }
     
+    [HttpGet("/profile/show/{id}")]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> Details(string id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized();
+        
+        // TODO: Check user is in a room owned by the teacher before showing the profile
+        
+        // Check if the user has an insight profile
+        var hasInsightProfile = await _insight.HasInsightProfileAsync(id);
+        if (!hasInsightProfile)
+            return RedirectToAction("CreateProfile");
+        
+        var insight = await _insight.GetInsightByUserIdAsync(id);
+        
+        return View("Profile", insight);
+    }
+    
     [HttpGet("/profile/create")]
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> CreateProfile()

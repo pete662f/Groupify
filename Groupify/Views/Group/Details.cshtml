@@ -22,7 +22,19 @@
         <ul>
             @foreach (var user in Model.Group.Users)
             {
-                <li>@user.FirstName @user.LastName - Wheel position: @user.Insight?.WheelPosition</li>
+                if (User.IsInRole("Teacher"))
+                {
+                    <li>
+                        <a asp-controller="Insight" asp-action="Details" asp-route-id="@user.Id">
+                            @user.FirstName @user.LastName (@user.Email)</a>
+                        - Wheel position: @user.Insight?.WheelPosition
+                    </li>
+                }
+                else
+                {
+                    <li>@user.FirstName @user.LastName (@user.Email) - Wheel position: @user.Insight?.WheelPosition</li>
+                }
+                
             }
         </ul>
     </div>
