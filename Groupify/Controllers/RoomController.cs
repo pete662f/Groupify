@@ -86,6 +86,7 @@ public class RoomController : Controller
             RoomDetails = new DetailsRoomViewModel
             {
                 Room = room,
+                InviteLink = Url.Action("JoinRoom", "Room", new { roomId }, Request.Scheme),
                 Groups = room.Groups,
             },
         };
