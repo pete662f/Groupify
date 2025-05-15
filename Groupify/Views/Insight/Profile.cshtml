@@ -4,9 +4,12 @@
     ViewData["Title"] = "Profile";
 }
 
-@if (User.IsInRole("Student"))
+@if (User.IsInRole("Teacher"))
 {
-    <h2 class="text-center">Your Insight</h2>
+    <h2 class="text-center">Showing profile for @Model.ApplicationUser.FirstName @Model.ApplicationUser.LastName (@Model.ApplicationUser.Email)</h2>
+} else
+{
+    <h2 class="text-center">Your profile</h2>
 }
 <div class="row text-center">
     <div class="col-md-6">
