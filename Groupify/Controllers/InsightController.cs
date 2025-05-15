@@ -6,6 +6,7 @@ using Groupify.ViewModels.Insight;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace Groupify.Controllers;
 
@@ -38,6 +39,26 @@ public class InsightController : Controller
         var insight = await _insight.GetInsightByUserIdAsync(user.Id);
         
         return View(insight);
+    }
+    
+    [HttpGet("/profile/show/{id}")]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> Details(string id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized();
+        
+        // TODO: Check user is in a room owned by the teacher before showing the profile
+        
+        // Check if the user has an insight profile
+        var hasInsightProfile = await _insight.HasInsightProfileAsync(id);
+        if (!hasInsightProfile)
+            return RedirectToAction("CreateProfile");
+        
+        var insight = await _insight.GetInsightByUserIdAsync(id);
+        
+        return View("Profile", insight);
     }
     
     [HttpGet("/profile/create")]
@@ -130,5 +151,25 @@ public class InsightController : Controller
             ModelState.AddModelError("", ex.Message);
             return View("UpdateProfile", vm);
         } 
+    }
+    
+    [HttpPost("/profile/delete/{userId}")]
+    [Authorize(Roles = "Admin")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteProfile(string userId)
+    {
+        var userToDelete = await _userManager.FindByIdAsync(userId);
+        if (userToDelete == null)
+            return NotFound();
+        
+        bool isStudent = await _userManager.IsInRoleAsync(userToDelete, "Student");
+        if (!isStudent)
+            return BadRequest("Only students can be deleted.");
+
+        var result = await _userManager.DeleteAsync(userToDelete);
+        if (!result.Succeeded)
+            throw new InvalidOperationException($"Unexpected error deleting user with ID '{userId}'.");
+
+        return Redirect("~/");
     }
 }

@@ -13,6 +13,9 @@
         box-shadow: 0 .5rem 1rem rgba(33,150,243,0.4) !important;
         border-color: #2196f3 !important;
     }
+    .group-box.highlight-group {
+        background-color: #cbe0ff; /* adjust as needed */
+    }
     .group-box h4 {
         margin-bottom: .75rem;
         font-size: 1.25rem;
@@ -44,7 +47,8 @@
 <div class="row">
     @foreach (var group in Model.RoomDetails.Groups.OrderBy(g => g.GroupNumber))
     {
-        <div class="group-box col m-2" data-group-id="@group.Id"
+        var highlightClass = group.Id == Model.UserGroupId ? "highlight-group" : "";
+        <div class="group-box col m-2 @highlightClass" data-group-id="@group.Id"
              ondragover="event.preventDefault(); this.classList.add('drag-over');"
              ondragleave="this.classList.remove('drag-over');"
              ondrop="onUserDrop(event); this.classList.remove('drag-over');">

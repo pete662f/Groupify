@@ -18,7 +18,7 @@
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
 
-<div class="row text-center">
+<div class="text-center justify-content-center align-items-center">
     <div class="d-flex justify-content-center align-items-center">
         <div class="d-flex align-items-center">
             <h2 id="roomName" class="mb-0 cursor-pointer" onclick="toggleRoomNameEdit()">@Model.RoomDetails.Room.Name</h2>
@@ -32,6 +32,13 @@
                 <i class="bi bi-pencil-fill text-dark"></i>
             </button>
         </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-center gap-2">
+        <span>Invite link:</span>
+        <span id="inviteLink" class="text-break">@Model.RoomDetails.InviteLink</span>
+        <button type="button" class="btn btn-link p-0 text-decoration-none shadow-none" onclick="copyInviteLink(this)" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
+            <i id="copyIcon" class="bi bi-clipboard-fill fs-5 text-dark"></i>
+        </button>
     </div>
 </div>
 
@@ -64,6 +71,43 @@
 
 @section Scripts {
     <script>
+        function copyInviteLink(button) {
+            const linkText = document.getElementById('inviteLink').innerText;
+            navigator.clipboard.writeText(linkText).then(() => {
+                const icon = document.getElementById('copyIcon');
+                icon.classList.remove('bi-clipboard-fill');
+                icon.classList.add('bi-clipboard-check-fill');
+                button.setAttribute('data-bs-title', 'Copied!');
+
+                // Update tooltip content dynamically
+                const tooltip = bootstrap.Tooltip.getInstance(button);
+                tooltip.setContent({ '.tooltip-inner': 'Copied!' });
+
+                // Remove focus outline after click
+                button.blur();
+
+                // Revert icon & tooltip after 2 seconds
+                setTimeout(() => {
+                    icon.classList.remove('bi-clipboard-check-fill');
+                    icon.classList.add('bi-clipboard-fill');
+                    button.setAttribute('data-bs-title', 'Copy to clipboard');
+                    tooltip.setContent({ '.tooltip-inner': 'Copy to clipboard' });
+                }, 1000);
+            }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+        }
+
+        // Initialize Bootstrap tooltips
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl, {
+                    delay: { show: 50, hide: 500 }  // <== Add delay here
+                });
+            });
+        });
+        
         function toggleRoomNameEdit() {
             const displayElement = document.getElementById('roomName');
             const input = document.getElementById('roomNameInput');
@@ -248,5 +292,6 @@
                 location.reload();
             });
         }
+    
     </script>
 }

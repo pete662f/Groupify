@@ -5,16 +5,26 @@
 <ul>
     @foreach (var user in Model.RoomDetails.Room.Users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName))
     {
+        @if (User.IsInRole("Teacher"))
+        {
         <li>
-            @user.FirstName @user.LastName (@user.UserName)
-            @if (User.IsInRole("Teacher"))
-            {
-                <span>|</span>
-                <button class="btn btn-link btn-sm text-danger p-0 small text-decoration-none"
-                        onclick="removeUser('@Model.RoomDetails.Room.Id', '@user.Id', this)">
-                    Remove
-                </button>
-            }
+            <a asp-controller="Insight" asp-action="Details" asp-route-id="@user.Id">
+                @user.FirstName @user.LastName (@user.UserName)
+            </a>
+            
+            <span>|</span>
+            <button class="btn btn-link btn-sm text-danger p-0 small text-decoration-none"
+                    onclick="removeUser('@Model.RoomDetails.Room.Id', '@user.Id', this)">
+                Remove
+            </button>
+            
         </li>
+        } 
+        else
+        {
+            <li>
+                @user.FirstName @user.LastName (@user.UserName)
+            </li>
+        }
     }
 </ul>

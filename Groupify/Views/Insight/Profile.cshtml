@@ -4,7 +4,13 @@
     ViewData["Title"] = "Profile";
 }
 
-<h2 class="text-center">Your Insight</h2>
+@if (User.IsInRole("Teacher"))
+{
+    <h2 class="text-center">Showing profile for @Model.ApplicationUser.FirstName @Model.ApplicationUser.LastName (@Model.ApplicationUser.Email)</h2>
+} else
+{
+    <h2 class="text-center">Your profile</h2>
+}
 <div class="row text-center">
     <div class="col-md-6">
         <h3 class="text-center">Insights Discovery® wheel</h3>
@@ -15,10 +21,31 @@
         <div class="mx-5">
             <canvas id="insightChart" width="400" height="400"></canvas>
         </div>
-        <div class="text-center mt-4">
-            <a asp-action="UpdateProfile" class="btn btn-primary px-4 py-2 rounded-3">Update Profile</a>
-        </div>
+        @if (User.IsInRole("Student"))
+        {
+            <div class="text-center mt-4">
+                <a asp-action="UpdateProfile" class="btn btn-primary px-4 py-2 rounded-3">Update Profile</a>
+            </div>
+        }
     </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="row justify-content-center mt-3 mb-3">
+            <div class="col-auto">
+                <form asp-controller="Insight"
+                      asp-action="DeleteProfile"
+                      asp-route-userId="@Model.ApplicationUser.Id"
+                      method="post"
+                      onsubmit="return confirm('Are you sure you want to delete this user? This cannot be undone.');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill me-1"></i> Delete User
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+
 </div>
 
 
