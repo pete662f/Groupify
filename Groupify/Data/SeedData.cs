@@ -80,7 +80,7 @@ namespace Groupify.Data
                                 await userManager.AddToRoleAsync(bulkStudent, "Student");
 
                                 // Create insight profile for the student
-                                int nr = i % 499; // To cycle through the rows in the Excel
+                                int nr = i % 490; // To cycle through the rows in the Excel
                                 if (worksheet.Rows.Count > nr + 1)
                                 {
                                     var row = worksheet.Rows[nr + 1];
