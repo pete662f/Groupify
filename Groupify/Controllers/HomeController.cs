@@ -16,7 +16,7 @@ public class HomeController : Controller
         _insight = insight;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
         return View();
     }
