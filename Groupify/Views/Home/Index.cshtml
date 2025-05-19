@@ -1,7 +1,57 @@
 ﻿@{
+    
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h1 class="display-4">Welcome</h1>
+    } else
+    {
+        
+    
+    <h1 class="display-4">Demo</h1>
+    <p>Select a role and the demo will log in for you.</p>
+
+    <!-- A form with hidden email and password fields -->
+    <form id="loginForm" method="post" action="/Identity/Account/Login">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="email" name="email"/>
+        <input type="hidden" id="password" name="password"/>
+    </form>
+
+    <div class="mt-3">
+        <button class="btn btn-secondary me-2" onclick="loginAs('admin')">Login as Admin</button>
+        <button class="btn btn-secondary me-2" onclick="loginAs('teacher')">Login as Teacher</button>
+        <button class="btn btn-secondary me-2" onclick="loginAs('student')">Login as Student</button>
+        <button class="btn btn-secondary" onclick="loginAs('bulk')">Login as Bulk Student</button>
+    </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        function loginAs(role) {
+            const credentials = {
+                admin: {
+                    email: "admin0@demo.com",
+                },
+                teacher: {
+                    email: "teacher0@demo.com",
+                },
+                student: {
+                    email: "student0_0@demo.com",
+                },
+                bulk: {
+                    email: "bulkstudent0@demo.com",
+                }
+            };
+
+            const roleData = credentials[role];
+            document.getElementById("email").value = roleData.email;
+            document.getElementById("password").value = "P@@$$w0rd"
+            document.getElementById("loginForm").submit();
+        }
+    </script>
+}
