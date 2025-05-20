@@ -1,8 +1,10 @@
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Groupify.Data;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+[assembly: InternalsVisibleTo("Groupify.Tests")] // For testing purposes
 
 var builder = WebApplication.CreateBuilder(args);
 

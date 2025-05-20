@@ -7,7 +7,7 @@ namespace Groupify.Models.Domain;
 public class Insight
 {
     [Key, ForeignKey(nameof(ApplicationUser))]
-    public string ApplicationUserId { get; set; } = null!;
+    public string ApplicationUserId { get; internal init; } = null!;
 
     // Insight color energies 0 to 6
     [Required]
@@ -30,5 +30,5 @@ public class Insight
  
     public Vector4 ToVector4() => new Vector4(Blue, Green, Yellow, Red );
 
-    public ApplicationUser ApplicationUser { get; set; } = null!;
+    public ApplicationUser ApplicationUser { get; init; } = null!;
 }
