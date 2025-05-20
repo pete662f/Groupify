@@ -4,7 +4,7 @@
 }
 
 <div class="text-center">
-    @if (User.Identity.IsAuthenticated)
+    @if (User.Identity is { IsAuthenticated: true })
     {
         <h1 class="display-4">Welcome</h1>
     } else
