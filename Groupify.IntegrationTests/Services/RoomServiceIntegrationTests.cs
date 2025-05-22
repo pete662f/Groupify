@@ -12,7 +12,6 @@ namespace Groupify.IntegrationTests.Services;
 
 public class RoomServiceIntegrationTests : IClassFixture<IntegrationTestsFixture>
 {
-    private readonly IServiceProvider _provider;
     private readonly GroupifyDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoomService _service;
@@ -21,8 +20,8 @@ public class RoomServiceIntegrationTests : IClassFixture<IntegrationTestsFixture
 
     public RoomServiceIntegrationTests(IntegrationTestsFixture fixture)
     {
-        _provider = fixture.ServiceProvider;
-        var scope = _provider.CreateScope(); // Keep this scope for services resolved for the test class instance
+        var provider = fixture.ServiceProvider;
+        var scope = provider.CreateScope(); // Keep this scope for services resolved for the test class instance
         _context = scope.ServiceProvider.GetRequiredService<GroupifyDbContext>();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _service = new RoomService(_context, _userManager);
@@ -372,11 +371,11 @@ public class RoomServiceIntegrationTests : IClassFixture<IntegrationTestsFixture
     [InlineData("N")] 
     [InlineData(" ")] 
     [InlineData(null)] 
-    public async Task ChangeRoomNameAsync_ThrowsArgumentException_ForInvalidName(string invalidName)
+    public async Task ChangeRoomNameAsync_ThrowsArgumentException_ForInvalidName(string? invalidName)
     {
         var roomOwner = await GetOrCreateTestUserAsync("owner.invalidname@test.com", "Teacher");
         var room = await CreateTestRoomAsync("InvalidNameChangeRoom", roomOwner.Email!);
-        var ex = await Assert.ThrowsAsync<ArgumentException>(() => _service.ChangeRoomNameAsync(room.Id, invalidName));
+        var ex = await Assert.ThrowsAsync<ArgumentException>(() => _service.ChangeRoomNameAsync(room.Id, invalidName!));
         Assert.Equal("Room name must be at least 2 characters long", ex.Message);
     }
     
@@ -411,10 +410,10 @@ public class RoomServiceIntegrationTests : IClassFixture<IntegrationTestsFixture
     [InlineData("S")] 
     [InlineData("  ")] 
     [InlineData(null)]
-    public async Task CreateRoomAsync_ThrowsArgumentException_ForInvalidName(string invalidName)
+    public async Task CreateRoomAsync_ThrowsArgumentException_ForInvalidName(string? invalidName)
     {
         var owner = await GetOrCreateTestUserAsync("owner.invalidcreateroom@test.com", "Teacher");
-        var ex = await Assert.ThrowsAsync<ArgumentException>(() => _service.CreateRoomAsync(invalidName, owner.Id));
+        var ex = await Assert.ThrowsAsync<ArgumentException>(() => _service.CreateRoomAsync(invalidName!, owner.Id));
         Assert.Equal("Room name must be at least 2 characters long", ex.Message);
     }
 

@@ -9,7 +9,7 @@ public class GroupServiceSeededIntegrationTests
     : IClassFixture<IntegrationTestsFixture>
 {
     private readonly GroupifyDbContext _context;
-    private readonly GroupService      _service;
+    private readonly GroupService _service;
 
     public GroupServiceSeededIntegrationTests(IntegrationTestsFixture fixture)
     {
@@ -22,8 +22,8 @@ public class GroupServiceSeededIntegrationTests
     public async Task MegaRoom_IsSeededWithThousandStudents()
     {
         var mega = await _context.Rooms
-                                 .Include(r => r.Users)
-                                 .FirstOrDefaultAsync(r => r.Name == "Mega Room");
+             .Include(r => r.Users)
+             .FirstOrDefaultAsync(r => r.Name == "Mega Room");
         Assert.NotNull(mega);
         Assert.Equal(1000, mega.Users.Count);
     }
@@ -36,8 +36,8 @@ public class GroupServiceSeededIntegrationTests
     {
         // Arrange
         var mega = await _context.Rooms
-                                 .Include(r => r.Users)
-                                 .FirstAsync(r => r.Name == "Mega Room");
+             .Include(r => r.Users)
+             .FirstAsync(r => r.Name == "Mega Room");
 
         // Remove any existing groups so we can re-create
         await _service.RemoveAllGroupsByRoomIdAsync(mega.Id);
@@ -49,9 +49,9 @@ public class GroupServiceSeededIntegrationTests
 
         // Assert
         var groups = await _context.Groups
-                                   .Include(g => g.Users)
-                                   .Where(g => g.RoomId == mega.Id)
-                                   .ToListAsync();
+           .Include(g => g.Users)
+           .Where(g => g.RoomId == mega.Id)
+           .ToListAsync();
 
         Assert.Equal(expected, groups.Count);
         Assert.All(groups, g =>
@@ -76,8 +76,8 @@ public class GroupServiceSeededIntegrationTests
     {
         var teacher0 = await _context.Users.FirstAsync(u => u.Email == "teacher0@demo.com");
         var room60   = await _context.Rooms
-                                     .Include(r => r.Users)
-                                     .FirstAsync(r => r.OwnerId == teacher0.Id);
+             .Include(r => r.Users)
+             .FirstAsync(r => r.OwnerId == teacher0.Id);
 
         // groupSize = 60 → needs at least 62 users
         await Assert.ThrowsAsync<InvalidOperationException>(
@@ -92,8 +92,8 @@ public class GroupServiceSeededIntegrationTests
     {
         var teacher1 = await _context.Users.FirstAsync(u => u.Email == "teacher1@demo.com");
         var room     = await _context.Rooms
-                                     .Include(r => r.Users)
-                                     .FirstAsync(r => r.OwnerId == teacher1.Id);
+            .Include(r => r.Users)
+            .FirstAsync(r => r.OwnerId == teacher1.Id);
 
         // clear any prior groups
         await _service.RemoveAllGroupsByRoomIdAsync(room.Id);
@@ -103,9 +103,9 @@ public class GroupServiceSeededIntegrationTests
         await _service.CreateGroupsAsync(room.Id, groupSize);
 
         var groups = await _context.Groups
-                                   .Include(g => g.Users)
-                                   .Where(g => g.RoomId == room.Id)
-                                   .ToListAsync();
+            .Include(g => g.Users)
+            .Where(g => g.RoomId == room.Id)
+            .ToListAsync();
 
         Assert.Equal(expected, groups.Count);
         Assert.All(groups, g =>
@@ -141,7 +141,7 @@ public class GroupServiceSeededIntegrationTests
     public async Task GetGroupByUserIdAndRoomIdAsync_ReturnsEmpty_WhenNotAssigned()
     {
         var teacher = await _context.Users.FirstAsync(u => u.Email == "teacher0@demo.com");
-        var room    = await _context.Rooms.FirstAsync(r => r.OwnerId == teacher.Id);
+        var room = await _context.Rooms.FirstAsync(r => r.OwnerId == teacher.Id);
 
         var result = await _service.GetGroupByUserIdAndRoomIdAsync(teacher.Id, room.Id);
         Assert.Equal(Guid.Empty, result);
