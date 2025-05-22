@@ -1,4 +1,6 @@
 ﻿using Groupify.Data;
+using Groupify.Data.Services;
+using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Groupify.ViewModels.Group;
@@ -11,12 +13,12 @@ namespace Groupify.Controllers;
 
 public class RoomController : Controller
 {
-    private readonly RoomService _roomService;
-    private readonly GroupService _groupService;
-    private readonly InsightService _insightService;
+    private readonly IRoomService _roomService;
+    private readonly IGroupService _groupService;
+    private readonly IInsightService _insightService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public RoomController(RoomService roomService, GroupService groupService, InsightService insightService, UserManager<ApplicationUser> userManager)
+    public RoomController(IRoomService roomService, IGroupService groupService, IInsightService insightService, UserManager<ApplicationUser> userManager)
     {
         _roomService = roomService;
         _groupService = groupService;
@@ -95,7 +97,7 @@ public class RoomController : Controller
         if (isOwner || isAdmin)
             return View("DetailsTeacher", vm);
         
-        vm.SingleMatchs = await _roomService.GetSingleMatchsAsync(roomId, user.Id);
+        vm.SingleMatchs = await _roomService.GetSingleMatchesAsync(roomId, user.Id);
         return View("DetailsStudent", vm);
     }
     

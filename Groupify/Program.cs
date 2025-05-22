@@ -1,8 +1,13 @@
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Groupify.Data;
+using Groupify.Data.Services;
+using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+[assembly: InternalsVisibleTo("Groupify.Tests")] // For testing purposes
+[assembly: InternalsVisibleTo("Groupify.IntegrationTests")] // For integration tests
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +18,9 @@ builder.Services.AddDbContext<GroupifyDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddScoped<RoomService>();
-builder.Services.AddScoped<GroupService>();
-builder.Services.AddScoped<InsightService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IInsightService, InsightService>();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()

@@ -1,11 +1,12 @@
+using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Groupify.Data;
+namespace Groupify.Data.Services;
 
-public class InsightService
+public class InsightService : IInsightService
 {
     private readonly GroupifyDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;

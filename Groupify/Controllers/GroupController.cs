@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
 using Groupify.Data;
+using Groupify.Data.Services;
+using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Groupify.ViewModels.Group;
@@ -14,11 +16,11 @@ namespace Groupify.Controllers;
 
 public class GroupController : Controller
 {
-    private readonly GroupService _groupService;
-    private readonly RoomService _roomService;
+    private readonly IGroupService _groupService;
+    private readonly IRoomService _roomService;
     private readonly UserManager<ApplicationUser> _userManager;
     
-    public GroupController(GroupService groupService, RoomService roomService, UserManager<ApplicationUser> userManager)
+    public GroupController(IGroupService groupService, IRoomService roomService, UserManager<ApplicationUser> userManager)
     {
         _groupService = groupService;
         _roomService = roomService;

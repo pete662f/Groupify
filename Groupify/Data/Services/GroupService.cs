@@ -1,12 +1,13 @@
-﻿using Groupify.Models.Domain;
+﻿using System.Numerics;
+using Groupify.Data.Services.Interfaces;
+using Groupify.Extensions;
+using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
-using Groupify.Extensions;
 
-namespace Groupify.Data;
+namespace Groupify.Data.Services;
 
-public class GroupService
+public class GroupService : IGroupService
 {
     private readonly GroupifyDbContext _context;
 
