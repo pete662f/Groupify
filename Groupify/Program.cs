@@ -2,9 +2,11 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Groupify.Data;
+using Groupify.Data.Services;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
-[assembly: InternalsVisibleTo("Groupify.Tests")] // For testing purposes
+[assembly: InternalsVisibleTo("Groupify.Testsl")] // For testing purposes
+[assembly: InternalsVisibleTo("Groupify.IntegrationTests")] // For integration tests
 
 var builder = WebApplication.CreateBuilder(args);
 
