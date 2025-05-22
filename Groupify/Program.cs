@@ -6,7 +6,7 @@ using Groupify.Data.Services;
 using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
-[assembly: InternalsVisibleTo("Groupify.Testsl")] // For testing purposes
+[assembly: InternalsVisibleTo("Groupify.Tests")] // For testing purposes
 [assembly: InternalsVisibleTo("Groupify.IntegrationTests")] // For integration tests
 
 var builder = WebApplication.CreateBuilder(args);
