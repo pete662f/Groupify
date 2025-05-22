@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
 using Groupify.Data;
+using Groupify.Data.Services;
+using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Groupify.ViewModels.Insight;
@@ -13,10 +15,10 @@ namespace Groupify.Controllers;
 public class InsightController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly InsightService _insight;
+    private readonly IInsightService _insight;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public InsightController(ILogger<HomeController> logger, InsightService insight, UserManager<ApplicationUser> userManager)
+    public InsightController(ILogger<HomeController> logger, IInsightService insight, UserManager<ApplicationUser> userManager)
     {
         _logger = logger;
         _insight = insight;

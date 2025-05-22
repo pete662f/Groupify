@@ -1,14 +1,15 @@
 ﻿using System.Numerics;
 using System.Security.Claims;
+using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Domain;
 using Groupify.Models.DTO;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Groupify.Data;
+namespace Groupify.Data.Services;
 
-public class RoomService
+public class RoomService : IRoomService
 {
     private readonly GroupifyDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -21,7 +22,7 @@ public class RoomService
     
     // TODO: Add checks for user roles in nearly all methods to ensure that only the right users can access the methods (Even tho there are checks in the controller)
     
-    public async Task<IEnumerable<UserMatchDto>> GetSingleMatchsAsync(Guid roomId, string userId, int maxCount = 10)
+    public async Task<IEnumerable<UserMatchDto>> GetSingleMatchesAsync(Guid roomId, string userId, int maxCount = 10)
     {
         var user = await _context.Users.Include(u => u.Insight)
             .FirstOrDefaultAsync(u => u.Id == userId);

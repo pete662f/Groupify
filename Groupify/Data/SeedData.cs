@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using ExcelDataReader;
+using Groupify.Data.Services.Interfaces;
 using Groupify.Models.Domain;
 using Groupify.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Groupify.Data
 {
@@ -19,8 +14,8 @@ namespace Groupify.Data
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<GroupifyDbContext>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var roomManager = scope.ServiceProvider.GetRequiredService<RoomService>();
-            var insightService = scope.ServiceProvider.GetRequiredService<InsightService>();
+            var roomManager = scope.ServiceProvider.GetRequiredService<IRoomService>();
+            var insightService = scope.ServiceProvider.GetRequiredService<IInsightService>();
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<SeedData>>();
 
             await context.Database.MigrateAsync();

@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using Groupify.Data;
+using Groupify.Data.Services;
+using Groupify.Data.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Groupify.Models;
 
@@ -8,9 +10,9 @@ namespace Groupify.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly InsightService _insight;
+    private readonly IInsightService _insight;
 
-    public HomeController(ILogger<HomeController> logger, InsightService insight)
+    public HomeController(ILogger<HomeController> logger, IInsightService insight)
     {
         _logger = logger;
         _insight = insight;
