@@ -1,4 +1,4 @@
-﻿namespace Groupify.Tests;
+﻿namespace Groupify.Tests.Controllers;
 
 public class InsightControllerTests
 {
