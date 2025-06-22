@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Groupify.Data;
 using Groupify.Data.Services;
+using Groupify.Data.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Groupify.Models.Identity;
@@ -33,15 +34,13 @@ namespace Groupify.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly InsightService _insightService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            InsightService insightService)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,7 +48,6 @@ namespace Groupify.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _insightService = insightService;
         }
 
         /// <summary>
